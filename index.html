@@ -33,14 +33,15 @@
     let scoreText;
     let month = 3;
     let year = 2025;
-    let startTime;
     let lastUpdateTime = 0;
     const updateInterval = 300000; // 5 דקות = 300,000 מילי-שניות
     let jumpKey;
+    let obstacles;
 
     function preload() {
         this.load.spritesheet('player', 'https://via.placeholder.com/80x40', { frameWidth: 40, frameHeight: 40 });
         this.load.image('ground', 'https://via.placeholder.com/800x50');
+        this.load.image('obstacle', 'https://via.placeholder.com/40x40');
     }
 
     function create() {
@@ -64,10 +65,15 @@
 
         // הצגת חיסכון וזמן
         scoreText = this.add.text(16, 16, '₪0 - 03/2025', { fontSize: '32px', fill: '#fff' });
-        startTime = this.time.now;
 
-        // הגדרת לחיצת מקש רווח לקפיצה
+        // הגדרת לחיצת מקש רווח או מסך לקפיצה
         jumpKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.input.on('pointerdown', jump, this);
+
+        // יצירת מכשולים (דמויות עם משפטים שליליים ותיבות פרסומות)
+        obstacles = this.physics.add.group();
+        this.time.addEvent({ delay: 3000, callback: spawnObstacle, callbackScope: this, loop: true });
+        this.physics.add.collider(player, obstacles, hitObstacle, null, this);
     }
 
     function update() {
@@ -83,10 +89,28 @@
             lastUpdateTime = currentTime;
         }
 
-        // קפיצה עם מקש רווח
-        if (Phaser.Input.Keyboard.JustDown(jumpKey) && player.body.touching.down) {
+        // קפיצה עם מקש רווח או לחיצה על המסך
+        if (Phaser.Input.Keyboard.JustDown(jumpKey) || this.input.activePointer.isDown) {
+            jump();
+        }
+    }
+
+    function jump() {
+        if (player.body.touching.down) {
             player.setVelocityY(-250);
         }
+    }
+
+    function spawnObstacle() {
+        let obstacle = obstacles.create(800, 350, 'obstacle');
+        obstacle.setVelocityX(-200);
+        obstacle.setCollideWorldBounds(false);
+        obstacle.setGravityY(0);
+        obstacle.setImmovable(true);
+    }
+
+    function hitObstacle() {
+        this.scene.restart();
     }
     </script>
 </body>
