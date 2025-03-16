@@ -1,0 +1,93 @@
+// יצירת משחק בסיסי עם קפיצה ומכשולים מתוקנים באמצעות Phaser.js
+
+// אתחול המשחק
+const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 400,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+const game = new Phaser.Game(config);
+let player;
+let ground;
+let score = 0;
+let scoreText;
+let startTime;
+let lastUpdateTime = 0;
+const updateInterval = 300000; // 5 דקות = 300,000 מילי-שניות
+let obstacles;
+let jumpKey;
+
+function preload() {
+    this.load.image('ground', 'https://via.placeholder.com/800x50');
+    this.load.image('player', 'https://via.placeholder.com/40x40');
+    this.load.image('obstacle', 'https://via.placeholder.com/30x30');
+}
+
+function create() {
+    // יצירת קרקע
+    ground = this.physics.add.staticGroup();
+    ground.create(400, 380, 'ground');
+    
+    // יצירת דמות ראשית
+    player = this.physics.add.sprite(100, 300, 'player');
+    player.setCollideWorldBounds(true);
+    this.physics.add.collider(player, ground);
+    
+    // הצגת ניקוד
+    scoreText = this.add.text(16, 16, '₪0', { fontSize: '32px', fill: '#fff' });
+    startTime = this.time.now;
+    
+    // יצירת קבוצת מכשולים
+    obstacles = this.physics.add.group();
+    this.time.addEvent({ delay: 3000, callback: spawnObstacle, callbackScope: this, loop: true });
+    this.physics.add.collider(player, obstacles, hitObstacle, null, this);
+    
+    // הגדרת לחיצת מקש רווח או מסך לקפיצה
+    jumpKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.input.on('pointerdown', jump, this);
+}
+
+function update() {
+    let currentTime = this.time.now;
+    if (currentTime - lastUpdateTime >= updateInterval) {
+        score += 5000;
+        scoreText.setText('₪' + score);
+        lastUpdateTime = currentTime;
+    }
+    
+    // קפיצה עם מקש רווח
+    if (Phaser.Input.Keyboard.JustDown(jumpKey)) {
+        jump();
+    }
+}
+
+function jump() {
+    if (player.body.touching.down) {
+        player.setVelocityY(-250);
+    }
+}
+
+function spawnObstacle() {
+    let obstacle = obstacles.create(800, 350, 'obstacle');
+    obstacle.setVelocityX(-200);
+    obstacle.setCollideWorldBounds(false);
+    obstacle.setGravityY(0); // מניעת נפילה של מכשולים אחד על השני
+    obstacle.setImmovable(true); // קובע שהמכשול קשיח ולא נופל
+}
+
+function hitObstacle() {
+    this.scene.restart();
+}
