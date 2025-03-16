@@ -596,75 +596,541 @@ powerups.forEach(powerup => {
 });
         
         // Render game
-        function renderGame() {
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw sky
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw ground
-            ctx.fillStyle = '#8B4513';
-            ctx.fillRect(0, ground.y, ground.width, ground.height);
-            
-            // Draw player
-            if (player.powerUp) {
-                ctx.fillStyle = '#FF9900'; // Orange for powered up
-            } else {
-                ctx.fillStyle = '#FF0000'; // Red for normal
-            }
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-            
-            // Draw companion if active
-            if (player.companion && player.powerUp) {
-                ctx.fillStyle = '#0000FF'; // Blue for companion
-                ctx.fillRect(player.x - 40, player.y, 30, 50);
-                
-                // Draw speech bubble
-                ctx.fillStyle = '#FFFFFF';
-                ctx.fillRect(player.x - 50, player.y - 30, 100, 20);
-                ctx.fillStyle = '#000000';
-                ctx.font = '12px Arial';
-                ctx.fillText("אני איתך!", player.x - 40, player.y - 15);
-            }
-            
-            // Draw obstacles
-obstacles.forEach(obstacle => {
-    // Draw obstacle
-    switch(obstacle.type) {
-        case 'person':
-            ctx.fillStyle = '#0000FF'; // Blue for person
-            break;
-        case 'ad':
-            ctx.fillStyle = '#FF00FF'; // Magenta for ad
-            break;
-        case 'food':
-            ctx.fillStyle = '#00FF00'; // Green for food
-            break;
-    }
-    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+function renderGame() {
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Draw speech bubble
-    const bubbleWidth = 100;
-    const bubbleHeight = 30;
-    const bubbleX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
-    const bubbleY = obstacle.y - bubbleHeight - 10;
+    // Draw sky
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw bubble background
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-    ctx.strokeStyle = '#000000';
-    ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+    // Draw ground
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(0, ground.y, ground.width, ground.height);
+    ctx.fillStyle = '#228B22'; // Grass color
+    ctx.fillRect(0, ground.y, ground.width, 10);
     
-    // Draw text
+    // Draw player
     ctx.fillStyle = '#000000';
-    ctx.font = '12px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(obstacle.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
-    ctx.textAlign = 'start';
-});
+    // Head
+    ctx.beginPath();
+    ctx.arc(player.x + player.width/2, player.y + player.width/2, player.width/2, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Body
+    ctx.fillRect(player.x + player.width/4, player.y + player.width, player.width/2, player.height - player.width);
+    
+    // Arms
+    ctx.fillRect(player.x - 5, player.y + player.width + 5, player.width/4, player.height/3);
+    ctx.fillRect(player.x + player.width - player.width/4 + 5, player.y + player.width + 5, player.width/4, player.height/3);
+    
+    // Legs
+    ctx.fillRect(player.x + player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
+    ctx.fillRect(player.x + player.width - player.width/5 - player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
+    
+    // Power-up effect
+    if (player.powerUp) {
+        ctx.strokeStyle = '#FFFF00';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width*0.8, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+    
+    // Draw companion if active
+    if (player.companion && player.powerUp) {
+        // Draw companion
+        ctx.fillStyle = '#0000FF';
+        
+        // Head
+        ctx.beginPath();
+        ctx.arc(player.x - 30, player.y + player.width/2, player.width/2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Body
+        ctx.fillRect(player.x - 30 - player.width/4, player.y + player.width, player.width/2, player.height - player.width);
+        
+        // Draw speech bubble
+        const bubbleWidth = 100;
+        const bubbleHeight = 30;
+        const bubbleX = player.x - 80;
+        const bubbleY = player.y - 40;
+        
+        // Draw bubble background
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+        ctx.strokeStyle = '#000000';
+        ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+        
+        // Draw text
+        ctx.fillStyle = '#000000';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText("אני איתך!", bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
+        ctx.textAlign = 'start';
+    }
+    
+    // Draw obstacles
+    obstacles.forEach(obstacle => {
+        switch(obstacle.type) {
+            case 'person':
+                // Draw person
+                ctx.fillStyle = '#0000FF';
+                
+                // Head
+                ctx.beginPath();
+                ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.width/2, obstacle.width/2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Body
+                ctx.fillRect(obstacle.x + obstacle.width/4, obstacle.y + obstacle.width, obstacle.width/2, obstacle.height - obstacle.width);
+                
+                // Arms
+                ctx.fillRect(obstacle.x - 5, obstacle.y + obstacle.width + 5, obstacle.width/4, obstacle.height/3);
+                ctx.fillRect(obstacle.x + obstacle.width - obstacle.width/4 + 5, obstacle.y + obstacle.width + 5, obstacle.width/4, obstacle.height/3);
+                
+                // Legs
+                ctx.fillRect(obstacle.x + obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
+                ctx.fillRect(obstacle.x + obstacle.width - obstacle.width/5 - obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
+                break;
+                
+            case 'ad':
+                // Draw ad
+                ctx.fillStyle = '#FF00FF';
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                
+                // Draw ad icon
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText("$", obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2 + 7);
+                ctx.textAlign = 'start';
+                break;
+                
+            case 'food':
+                switch(obstacle.text) {
+                    case "שמן קנולה":
+                        // Draw oil bottle
+                        ctx.fillStyle = '#FFD700';
+                        ctx.fillRect(obstacle.x + 10, obstacle.y, obstacle.width - 20, obstacle.height);
+                        ctx.fillRect(obstacle.x + 15, obstacle.y - 10, obstacle.width - 30, 10);
+                        
+                        // Draw label
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(obstacle.x + 15, obstacle.y + 10, obstacle.width - 30, obstacle.height / 2);
+                        
+                        // Draw text on label
+                        ctx.fillStyle = '#000000';
+                        ctx.font = '10px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText("שמן", obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/3);
+                        ctx.textAlign = 'start';
+                        break;
+                        
+                    case "ממתקים":
+                        // Draw candy
+                        ctx.fillStyle = '#FF69B4';
+                        ctx.beginPath();
+                        ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2, obstacle.width/2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.strokeStyle = '#FFFFFF';
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x + 10, obstacle.y + 10);
+                        ctx.lineTo(obstacle.x + obstacle.width - 10, obstacle.y + obstacle.height - 10);
+                        ctx.stroke();
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x + obstacle.width - 10, obstacle.y + 10);
+                        ctx.lineTo(obstacle.x + 10, obstacle.y + obstacle.height - 10);
+                        ctx.stroke();
+                        break;
+                        
+                    case "המבורגר":
+                        // Draw burger
+                        // Bottom bun
+                        ctx.fillStyle = '#CD853F';
+                        ctx.beginPath();
+                        ctx.ellipse(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height - 10, obstacle.width/2, obstacle.height/6, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Patty
+                        ctx.fillStyle = '#8B4513';
+                        ctx.beginPath();
+                        ctx.ellipse(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2, obstacle.width/2, obstacle.height/6, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Top bun
+                        ctx.fillStyle = '#CD853F';
+                        ctx.beginPath();
+                        ctx.ellipse(obstacle.x + obstacle.width/2, obstacle.y + 10, obstacle.width/2, obstacle.height/4, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                        
+                    case "קפה":
+                        // Draw coffee cup
+                        // Cup
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(obstacle.x + 5, obstacle.y + 10, obstacle.width - 10, obstacle.height - 15);
+                        
+                        // Handle
+                        ctx.beginPath();
+                        ctx.arc(obstacle.x + obstacle.width, obstacle.y + obstacle.height/2, obstacle.width/4, Math.PI * 1.5, Math.PI * 0.5);
+                        ctx.stroke();
+                        
+                        // Coffee
+                        ctx.fillStyle = '#4B3621';
+                        ctx.fillRect(obstacle.x + 10, obstacle.y + 15, obstacle.width - 20, obstacle.height/2);
+                        
+                        // Steam
+                        ctx.strokeStyle = '#FFFFFF';
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x + obstacle.width/2 - 10, obstacle.y + 5);
+                        ctx.lineTo(obstacle.x + obstacle.width/2 - 15, obstacle.y - 5);
+                        ctx.stroke();
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x + obstacle.width/2, obstacle.y + 5);
+                        ctx.lineTo(obstacle.x + obstacle.width/2, obstacle.y - 10);
+                        ctx.stroke();
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x + obstacle.width/2 + 10, obstacle.y + 5);
+                        ctx.lineTo(obstacle.x + obstacle.width/2 + 15, obstacle.y - 5);
+                        ctx.stroke();
+                        break;
+                        
+                    default:
+                        // Default food icon (apple)
+                        ctx.fillStyle = '#FF0000';
+                        ctx.beginPath();
+                        ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2, obstacle.width/2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Stem
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(obstacle.x + obstacle.width/2 - 2, obstacle.y + 5, 4, 10);
+                        
+                        // Leaf
+                        ctx.fillStyle = '#00FF00';
+                        ctx.beginPath();
+                        ctx.ellipse(obstacle.x + obstacle.width/2 + 10, obstacle.y + 10, 8, 5, Math.PI/4, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                }
+                break;
+                
+            case 'morning':
+                // Draw sun for morning power-up
+                const centerX = obstacle.x + obstacle.width/2;
+                const centerY = obstacle.y + obstacle.height/2;
+                const radius = Math.min(obstacle.width, obstacle.height) * 0.4;
+                
+                // Sun circle
+                ctx.fillStyle = '#FFCC00';
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Sun rays
+                ctx.strokeStyle = '#FFCC00';
+                ctx.lineWidth = 3;
+                for (let i = 0; i < 8; i++) {
+                    const angle = i * Math.PI / 4;
+                    const rayLength = radius * 0.7;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(
+                        centerX + Math.cos(angle) * radius,
+                        centerY + Math.sin(angle) * radius
+                    );
+                    ctx.lineTo(
+                        centerX + Math.cos(angle) * (radius + rayLength),
+                        centerY + Math.sin(angle) * (radius + rayLength)
+                    );
+                    ctx.stroke();
+                }
+                break;
+                
+            case 'phone':
+                // Draw phone
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(obstacle.x + 5, obstacle.y + 5, obstacle.width - 10, obstacle.height - 10);
+                
+                // Screen
+                ctx.fillStyle = '#4169E1';
+                ctx.fillRect(obstacle.x + 10, obstacle.y + 10, obstacle.width - 20, obstacle.height - 30);
+                
+                // Home button
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height - 15, 5, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+                
+            default:
+                // Default obstacle
+                ctx.fillStyle = '#888888';
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                break;
         }
+        
+        // Draw speech bubble if there is text
+        if (obstacle.text && obstacle.type !== 'food') {
+            const bubbleWidth = 100;
+            const bubbleHeight = 30;
+            const bubbleX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
+            const bubbleY = obstacle.y - bubbleHeight - 10;
+            
+            // Draw bubble with rounded corners
+            ctx.fillStyle = '#FFFFFF';
+            const radius = 5;
+            
+            ctx.beginPath();
+            ctx.moveTo(bubbleX + radius, bubbleY);
+            ctx.lineTo(bubbleX + bubbleWidth - radius, bubbleY);
+            ctx.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY, bubbleX + bubbleWidth, bubbleY + radius);
+            ctx.lineTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight - radius);
+            ctx.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight, bubbleX + bubbleWidth - radius, bubbleY + bubbleHeight);
+            ctx.lineTo(bubbleX + bubbleWidth/2 + 10, bubbleY + bubbleHeight);
+            ctx.lineTo(bubbleX + bubbleWidth/2, bubbleY + bubbleHeight + 10);
+            ctx.lineTo(bubbleX + bubbleWidth/2 - 10, bubbleY + bubbleHeight);
+            ctx.lineTo(bubbleX + radius, bubbleY + bubbleHeight);
+            ctx.quadraticCurveTo(bubbleX, bubbleY + bubbleHeight, bubbleX, bubbleY + bubbleHeight - radius);
+            ctx.lineTo(bubbleX, bubbleY + radius);
+            ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw text
+            ctx.fillStyle = '#000000';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(obstacle.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
+            ctx.textAlign = 'start';
+        }
+    });
+    
+    // Draw powerups
+    powerUps.forEach(powerUp => {
+        switch(powerUp.type) {
+            case 'morning':
+                // Draw sun icon for morning power-up
+                const centerX = powerUp.x + powerUp.width/2;
+                const centerY = powerUp.y + powerUp.height/2;
+                const radius = Math.min(powerUp.width, powerUp.height) * 0.4;
+                
+                // Sun circle
+                ctx.fillStyle = '#FFCC00';
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Sun rays
+                ctx.strokeStyle = '#FFCC00';
+                ctx.lineWidth = 3;
+                for (let i = 0; i < 8; i++) {
+                    const angle = i * Math.PI / 4;
+                    const rayLength = radius * 0.7;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(
+                        centerX + Math.cos(angle) * radius,
+                        centerY + Math.sin(angle) * radius
+                    );
+                    ctx.lineTo(
+                        centerX + Math.cos(angle) * (radius + rayLength),
+                        centerY + Math.sin(angle) * (radius + rayLength)
+                    );
+                    ctx.stroke();
+                }
+                break;
+                
+            case 'exercise':
+                // Draw dumbbell for exercise power-up
+                ctx.fillStyle = '#888888';
+                
+                // Left weight
+                ctx.beginPath();
+                ctx.arc(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height/2, powerUp.width * 0.15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Right weight
+                ctx.beginPath();
+                ctx.arc(powerUp.x + powerUp.width * 0.8, powerUp.y + powerUp.height/2, powerUp.width * 0.15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Handle
+                ctx.fillRect(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height/2 - 5, powerUp.width * 0.6, 10);
+                break;
+                
+            case 'meditation':
+                // Draw meditation icon
+                ctx.fillStyle = '#9370DB'; // Medium purple
+                
+                // Person sitting
+                ctx.beginPath();
+                ctx.arc(powerUp.x + powerUp.width/2, powerUp.y + powerUp.height * 0.3, powerUp.width * 0.2, 0, Math.PI * 2); // Head
+                ctx.fill();
+                
+                // Body (triangle shape for sitting person)
+                ctx.beginPath();
+                ctx.moveTo(powerUp.x + powerUp.width/2, powerUp.y + powerUp.height * 0.4);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.3, powerUp.y + powerUp.height * 0.9);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.7, powerUp.y + powerUp.height * 0.9);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Aura
+                ctx.strokeStyle = '#9370DB';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(powerUp.x + powerUp.width/2, powerUp.y + powerUp.height/2, powerUp.width * 0.45, 0, Math.PI * 2);
+                ctx.stroke();
+                break;
+                
+            case 'water':
+                // Draw water glass
+                // Glass outline
+                ctx.strokeStyle = '#87CEFA'; // Light sky blue
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(powerUp.x + powerUp.width * 0.3, powerUp.y + powerUp.height * 0.2);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height * 0.8);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.8, powerUp.y + powerUp.height * 0.8);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.7, powerUp.y + powerUp.height * 0.2);
+                ctx.closePath();
+                ctx.stroke();
+                
+                // Water inside
+                ctx.fillStyle = '#87CEFA';
+                ctx.beginPath();
+                ctx.moveTo(powerUp.x + powerUp.width * 0.25, powerUp.y + powerUp.height * 0.5);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height * 0.8);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.8, powerUp.y + powerUp.height * 0.8);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.75, powerUp.y + powerUp.height * 0.5);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Water drops
+                ctx.beginPath();
+                ctx.arc(powerUp.x + powerUp.width * 0.4, powerUp.y + powerUp.height * 0.3, 3, 0, Math.PI * 2);
+                ctx.arc(powerUp.x + powerUp.width * 0.6, powerUp.y + powerUp.height * 0.4, 3, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+                
+            case 'friendship':
+                // Draw friendship icon (two holding hands)
+                ctx.fillStyle = '#FFC0CB'; // Pink
+                
+                // First person
+                ctx.beginPath();
+                ctx.arc(powerUp.x + powerUp.width * 0.3, powerUp.y + powerUp.height * 0.3, powerUp.width * 0.15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillRect(powerUp.x + powerUp.width * 0.25, powerUp.y + powerUp.height * 0.45, powerUp.width * 0.1, powerUp.height * 0.3);
+                
+                // Second person
+                ctx.fillStyle = '#87CEEB'; // Sky blue
+                ctx.beginPath();
+                ctx.arc(powerUp.x + powerUp.width * 0.7, powerUp.y + powerUp.height * 0.3, powerUp.width * 0.15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillRect(powerUp.x + powerUp.width * 0.65, powerUp.y + powerUp.height * 0.45, powerUp.width * 0.1, powerUp.height * 0.3);
+                
+                // Holding hands
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(powerUp.x + powerUp.width * 0.35, powerUp.y + powerUp.height * 0.55);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.5, powerUp.y + powerUp.height * 0.65);
+                ctx.lineTo(powerUp.x + powerUp.width * 0.65, powerUp.y + powerUp.height * 0.55);
+                ctx.stroke();
+                break;
+                
+            default:
+                // Default power-up (star)
+                ctx.fillStyle = '#FFFF00';
+                const cx = powerUp.x + powerUp.width/2;
+                const cy = powerUp.y + powerUp.height/2;
+                const spikes = 5;
+                const outerRadius = powerUp.width/2;
+                const innerRadius = powerUp.width/4;
+                
+                ctx.beginPath();
+                let rot = Math.PI / 2 * 3;
+                let x = cx;
+                let y = cy;
+                const step = Math.PI / spikes;
+                
+                ctx.moveTo(cx, cy - outerRadius);
+                for (let i = 0; i < spikes; i++) {
+                    x = cx + Math.cos(rot) * outerRadius;
+                    y = cy + Math.sin(rot) * outerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+                    
+                    x = cx + Math.cos(rot) * innerRadius;
+                    y = cy + Math.sin(rot) * innerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+                }
+                ctx.lineTo(cx, cy - outerRadius);
+                ctx.closePath();
+                ctx.fill();
+                break;
+        }
+    });
+    
+    // Draw score and other UI elements
+    ctx.fillStyle = '#000000';
+    ctx.font = '18px Arial';
+    ctx.fillText(`ניקוד: ${score}`, 20, 30);
+    
+    // Draw power-up meter if active
+    if (player.powerUp) {
+        const meterWidth = 200;
+        const meterHeight = 15;
+        const meterX = canvas.width - meterWidth - 20;
+        const meterY = 20;
+        
+        // Draw meter background
+        ctx.fillStyle = '#CCCCCC';
+        ctx.fillRect(meterX, meterY, meterWidth, meterHeight);
+        
+        // Calculate remaining time as a percentage
+        const remainingPercent = player.powerUpTime / maxPowerUpTime;
+        
+        // Draw meter fill
+        ctx.fillStyle = '#FFFF00';
+        ctx.fillRect(meterX, meterY, meterWidth * remainingPercent, meterHeight);
+        
+        // Draw meter border
+        ctx.strokeStyle = '#000000';
+        ctx.strokeRect(meterX, meterY, meterWidth, meterHeight);
+        
+        // Draw label
+        ctx.fillStyle = '#000000';
+        ctx.font = '12px Arial';
+        ctx.fillText('זמן חיזוק', meterX + meterWidth + 5, meterY + meterHeight/2 + 4);
+    }
+    
+    // Draw game messages if any
+    if (gameMessage && gameMessageTime > 0) {
+        const alpha = Math.min(1, gameMessageTime / 100);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#000000';
+        ctx.font = '24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(gameMessage, canvas.width/2, canvas.height/2);
+        ctx.textAlign = 'start';
+        ctx.globalAlpha = 1.0;
+    }
+}
         
         // Update display
         function updateDisplay() {
