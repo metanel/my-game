@@ -500,10 +500,23 @@ function createObstacle() {
                 }
             }
             
-            // Maybe create a new obstacle (1% chance per frame)
-            if (Math.random() < 0.01) {
-                createObstacle();
-            }
+            // שנה את הסיכוי ליצירת מכשול חדש
+// Maybe create a new obstacle (1% chance per frame)
+if (Math.random() < 0.005) {  // שינוי מ-0.01 ל-0.005
+    // וודא שיש מספיק מרחק מהמכשול האחרון
+    let canCreateObstacle = true;
+    
+    for (let i = 0; i < obstacles.length; i++) {
+        if (obstacles[i].x > canvas.width - 200) {
+            canCreateObstacle = false;
+            break;
+        }
+    }
+    
+    if (canCreateObstacle) {
+        createObstacle();
+    }
+}
             
             // Maybe create a new powerup (0.5% chance per frame)
             if (Math.random() < 0.005) {
@@ -876,15 +889,26 @@ function renderGame() {
         }
         
         // Draw speech bubble if there is text
-        if (obstacle.text && obstacle.type !== 'food') {
-            const bubbleWidth = 100;
-            const bubbleHeight = 30;
-            const bubbleX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
-            const bubbleY = obstacle.y - bubbleHeight - 10;
-            
-            // Draw bubble with rounded corners
-            ctx.fillStyle = '#FFFFFF';
-            const radius = 5;
+        // טקסט סטטי - לא זז עם המכשול
+if (obstacle.text && obstacle.type !== 'food') {
+    const bubbleWidth = 100;
+    const bubbleHeight = 30;
+    const fixedY = obstacle.y - bubbleHeight - 10;
+    const fixedX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
+    
+    // צור מסגרת לבנה
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(fixedX, fixedY, bubbleWidth, bubbleHeight);
+    ctx.strokeStyle = '#000000';
+    ctx.strokeRect(fixedX, fixedY, bubbleWidth, bubbleHeight);
+    
+    // כתוב את הטקסט
+    ctx.fillStyle = '#000000';
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(obstacle.text, fixedX + bubbleWidth/2, fixedY + bubbleHeight/2 + 4);
+    ctx.textAlign = 'start';
+}
             
             ctx.beginPath();
             ctx.moveTo(bubbleX + radius, bubbleY);
@@ -1270,13 +1294,41 @@ function renderGame() {
             resetGame();
         });
         
-        // Start game
-        function startGame() {
-            resetGame();
-            
-            // Game loop
-            setInterval(updateGame, frameTime);
-        }
+        // הוסף את הקוד הזה לתחילת פונקציית startGame
+function startGame() {
+    // התאם את הקנבס לגודל המסך ברספונסיביות
+    const handleResize = function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ground.y = canvas.height * 0.8;
+        ground.width = canvas.width;
+        ground.height = canvas.height * 0.2;
+        player.y = ground.y - player.height;
+        
+        // התאם את גודל שחקן לגודל המסך
+        let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
+        scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // הגבל בין 0.5 ל-1.5
+        
+        player.width = 50 * scaleFactor;
+        player.height = 80 * scaleFactor;
+        
+        // עדכן גם את גודל הקפיצה בהתאם
+        player.jumpPower = 15 * scaleFactor;
+    };
+    
+    // הפעל את ההתאמה בתחילת המשחק
+    handleResize();
+    
+    // הוסף מאזין לשינוי גודל
+    window.removeEventListener('resize', handleResize); // הסר אם קיים
+    window.addEventListener('resize', handleResize);
+    
+    // אתחל את המשחק
+    resetGame();
+    
+    // Game loop
+    setInterval(updateGame, frameTime);
+}
         
         // Start the game when the page loads
         window.onload = function() {
