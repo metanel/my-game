@@ -1,4 +1,3 @@
-// HTML
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -11,7 +10,7 @@
             padding: 0;
             overflow: hidden;
             background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         #game-container {
             position: relative;
@@ -24,28 +23,38 @@
             top: 0;
             left: 0;
             background-color: #87CEEB;
+            touch-action: none;
+        }
+        .game-display {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         #score-display {
-            position: absolute;
             top: 10px;
             right: 10px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 10;
         }
         #date-display {
-            position: absolute;
             top: 10px;
             left: 10px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 10;
+        }
+        #tutorial-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+            max-width: 80%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .dialog-box {
             position: absolute;
@@ -61,19 +70,22 @@
             display: none;
             width: 80%;
             max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         .dialog-box h3 {
             margin-top: 0;
+            color: #2a6496;
         }
         .dialog-box button {
             margin: 5px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
         .dialog-box button:hover {
             background-color: #45a049;
@@ -89,58 +101,59 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.85);
             color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 12px;
             text-align: center;
             z-index: 100;
             display: none;
+            width: 80%;
+            max-width: 450px;
         }
-        #game-over button {
+        #game-over button,
+        #win-screen button {
             margin-top: 20px;
-            padding: 8px 16px;
+            padding: 12px 24px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        #game-over button:hover,
+        #win-screen button:hover {
+            background-color: #45a049;
         }
         #win-screen {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(25, 118, 210, 0.9);
             color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 12px;
             text-align: center;
             z-index: 100;
             display: none;
-        }
-        #win-screen button {
-            margin-top: 20px;
-            padding: 8px 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+            width: 80%;
+            max-width: 450px;
         }
         .speech-bubble {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 2px solid #333;
-    border-radius: 10px;
-    padding: 5px;
-    font-size: 14px;
-    width: 100px;
-    text-align: center;
-    z-index: 5;
-}
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 8px;
+            font-size: 14px;
+            width: 120px;
+            text-align: center;
+            z-index: 5;
+            word-wrap: break-word;
+        }
         .speech-bubble:after {
             content: "";
             position: absolute;
@@ -151,38 +164,117 @@
             border-style: solid;
             border-color: #333 transparent transparent transparent;
         }
-       @media (max-width: 600px) {
-    #game-canvas {
-        width: 100%;
-        height: 100%;
-    }
-    
-    #score-display, #date-display {
-        font-size: 14px;
-    }
-    
-    .dialog-box {
-        width: 90%;
-        max-width: 300px;
-        padding: 10px;
-    }
-    
-    .dialog-box h3 {
-        font-size: 16px;
-    }
-    
-    .dialog-box button {
-        padding: 6px 12px;
-        font-size: 14px;
-    }
-} 
+        #monthly-stats {
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: none;
+        }
+        #achievements {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: none;
+        }
+        .achievement {
+            padding: 5px;
+            margin-bottom: 5px;
+            background-color: rgba(76, 175, 80, 0.2);
+            border-radius: 4px;
+        }
+        .popup-message {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 20px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 20;
+        }
+        .power-meter {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 200px;
+            height: 15px;
+            background-color: #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        .power-meter-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        @media (max-width: 600px) {
+            .game-display {
+                font-size: 14px;
+                padding: 8px;
+            }
+            .dialog-box {
+                width: 95%;
+                max-width: 350px;
+                padding: 15px;
+            }
+            .dialog-box h3 {
+                font-size: 16px;
+            }
+            .dialog-box button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            #tutorial-message {
+                font-size: 14px;
+                max-width: 95%;
+            }
+            .power-meter {
+                width: 150px;
+                height: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="game-container">
         <canvas id="game-canvas"></canvas>
-        <div id="score-display">חיסכון: 0 ש"ח</div>
-        <div id="date-display">מרץ 2025</div>
+        <div id="score-display" class="game-display">חיסכון: 0 ש"ח</div>
+        <div id="date-display" class="game-display">מרץ 2025</div>
+        <div id="monthly-stats">
+            <div>הוצאות: <span id="expenses">0</span> ש"ח</div>
+            <div>הכנסות: <span id="income">0</span> ש"ח</div>
+        </div>
+        <div id="achievements"></div>
+        <div id="power-meter" class="power-meter">
+            <div id="power-meter-fill" class="power-meter-fill"></div>
+        </div>
+        <div id="popup-message" class="popup-message"></div>
+        
+        <div id="tutorial-message">
+            <h3>ברוכים הבאים למשחק החיסכון!</h3>
+            <p>המטרה שלך היא לצבור 100,000 ש"ח על ידי התחמקות ממכשולים ואיסוף חיזוקים.</p>
+            <p>לחץ על המסך או על מקש הרווח כדי לקפוץ מעל מכשולים.</p>
+            <p>אתה מרוויח 5,000 ש"ח בכל חודש, אבל היזהר מפיתויים להוציא כסף!</p>
+            <button id="start-btn">התחל לשחק</button>
+        </div>
         
         <div id="job-offer" class="dialog-box">
             <h3>הצעת עבודה חדשה!</h3>
@@ -202,6 +294,11 @@
             <h2>המשחק נגמר!</h2>
             <p id="game-over-reason"></p>
             <p>הגעת לחיסכון של <span id="final-score">0</span> ש"ח</p>
+            <div id="game-stats">
+                <p>שיחקת <span id="months-played">0</span> חודשים</p>
+                <p>אספת <span id="powerups-collected">0</span> חיזוקים</p>
+                <p>התחמקת מ-<span id="obstacles-avoided">0</span> מכשולים</p>
+            </div>
             <button id="restart-btn">התחל מחדש</button>
         </div>
         
@@ -209,6 +306,11 @@
             <h2>ניצחון!</h2>
             <p>הצלחת להגיע ליעד של 100,000 ש"ח!</p>
             <p>כל הכבוד על ההתמדה וקבלת ההחלטות הנכונות!</p>
+            <div id="win-stats">
+                <p>השלמת את המשחק ב-<span id="win-months">0</span> חודשים</p>
+                <p>אספת <span id="win-powerups">0</span> חיזוקים</p>
+                <p>התחמקת מ-<span id="win-obstacles">0</span> מכשולים</p>
+            </div>
             <button id="play-again-btn">שחק שוב</button>
         </div>
     </div>
@@ -227,41 +329,62 @@
         let gamePaused = false;
         let score = 0;
         let currentMonth = 0;
+        let tutorialShown = true;
+        
+        // Game statistics
+        let stats = {
+            monthsPlayed: 0,
+            powerupsCollected: 0,
+            obstaclesAvoided: 0,
+            expenses: 0,
+            income: 5000  // Starting monthly income
+        };
+        
+        // Achievements
+        let achievements = {
+            firstMonth: { earned: false, text: "הישרדות חודש ראשון" },
+            saveHero: { earned: false, text: "חסכת 50,000 ש\"ח" },
+            powerCollector: { earned: false, text: "אספת 10 חיזוקים" },
+            obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" }
+        };
+        
         const totalMonths = 20; // From March 2025 to November 2026
         const monthNames = [
-    "מרץ 2025", "אפריל 2025", "מאי 2025", "יוני 2025", "יולי 2025", 
-    "אוגוסט 2025", "ספטמבר 2025", "אוקטובר 2025", "נובמבר 2025", "דצמבר 2025",
-    "ינואר 2026", "פברואר 2026", "מרץ 2026", "אפריל 2026", "מאי 2026", 
-    "יוני 2026", "יולי 2026", "אוגוסט 2026", "ספטמבר 2026", "אוקטובר 2026", "נובמבר 2026"
-];
-const maxPowerUpTime = 300; // 5 seconds at 60fps
-let gameMessage = '';
-let gameMessageTime = 0;
+            "מרץ 2025", "אפריל 2025", "מאי 2025", "יוני 2025", "יולי 2025", 
+            "אוגוסט 2025", "ספטמבר 2025", "אוקטובר 2025", "נובמבר 2025", "דצמבר 2025",
+            "ינואר 2026", "פברואר 2026", "מרץ 2026", "אפריל 2026", "מאי 2026", 
+            "יוני 2026", "יולי 2026", "אוגוסט 2026", "ספטמבר 2026", "אוקטובר 2026", "נובמבר 2026"
         ];
         
-        // 5 minutes per month
-        const monthDuration = 300; // 5 minutes in seconds
+        // Month duration is now more reasonable - 30 seconds per month
+        const monthDuration = 30; // 30 seconds
         const framesPerSecond = 60;
         const frameTime = 1000 / framesPerSecond;
         const framesPerMonth = monthDuration * framesPerSecond;
         let currentMonthTimer = 0;
         
+        // Power-up variables
+        const maxPowerUpTime = 300; // 5 seconds at 60fps
+        let gameMessage = '';
+        let gameMessageTime = 0;
+        
         // Player variables
-const player = {
-    x: canvas.width * 0.2,
-    y: canvas.height * 0.7,
-    width: 50,  // הוגדל מ-30
-    height: 80, // הוגדל מ-50
-    jumping: false,
-    jumpPower: 15,
-    jumpVelocity: 0,
-    gravity: 0.5,
-    speed: 5,
-    powerUp: false,
-    powerUpTime: 0,
-    powerUpHits: 0,
-    companion: false
-};
+        const player = {
+            x: canvas.width * 0.2,
+            y: canvas.height * 0.7,
+            width: 50,
+            height: 80,
+            jumping: false,
+            jumpPower: 15,
+            jumpVelocity: 0,
+            gravity: 0.5,
+            speed: 5,
+            powerUp: false,
+            powerUpTime: 0,
+            powerUpHits: 0,
+            powerUpType: '',
+            companion: false
+        };
         
         // Ground variables
         const ground = {
@@ -270,19 +393,18 @@ const player = {
             height: canvas.height * 0.2
         };
         
-        // Obstacles array
+        // Arrays for game objects
         let obstacles = [];
-        
-        // Powerups array
         let powerups = [];
+        let pendingObstacles = [];  // For delayed creation
         
         // Job offer variables
         let jobOfferStage = 0;
         const jobOfferTexts = [
             "האם אתה בטוח שאתה לא רוצה להחליף את העבודה שלך?",
-            "היא באמת שווה!",
+            "היא באמת שווה ומשלמת יותר!",
             "אפשר להרוויח שם יותר כסף!",
-            "היא יותר קלילה!"
+            "היא יותר קלילה ופחות שעות עבודה!"
         ];
         
         // Helper for random number generation
@@ -290,108 +412,125 @@ const player = {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
         
+        // Display popup message
+        function showPopupMessage(message, duration = 2000) {
+            const popup = document.getElementById('popup-message');
+            popup.textContent = message;
+            popup.style.opacity = '1';
+            
+            setTimeout(() => {
+                popup.style.opacity = '0';
+            }, duration);
+        }
+        
         // Create obstacle
-function createObstacle() {
-    const types = ['person', 'ad', 'food'];
-    const type = types[getRandomInt(0, 2)];
-    
-    let obstacle;
-    
-    if (type === 'person') {
-        const negativeComments = [
-            "אתה לא טוב",
-            "אתה לא בסדר",
-            "אתה לא תצליח",
-            "אתה לא יכול",
-            "זה גדול עליך"
-        ];
-        
-        obstacle = {
-            x: canvas.width,
-            y: ground.y - 80,
-            width: 50,  // הוגדל מ-30
-            height: 80, // הוגדל מ-50
-            type: type,
-            speed: 5,
-            text: negativeComments[getRandomInt(0, negativeComments.length - 1)]
-        };
-    } else if (type === 'ad') {
-        const adTexts = [
-            "תבזבז!",
-            "תקנה!",
-            "אתה חייב בגדים!",
-            "אתה חייב חופשה!",
-            "אתה חייב כנס! זה יעזור לך לגדול!",
-            "זה רק קפה קטן על הדרך!"
-        ];
-        
-        obstacle = {
-            x: canvas.width,
-            y: ground.y - 70,
-            width: 60,  // הוגדל מ-40
-            height: 70, // הוגדל מ-40
-            type: type,
-            speed: 5,
-            text: adTexts[getRandomInt(0, adTexts.length - 1)]
-        };
-    } else if (type === 'food') {
-        const foodTypes = [
-            "שמן קנולה",
-            "ממתקים",
-            "משקאות מוגזים",
-            "גלידות",
-            "חטיפים"
-        ];
-        
-        obstacle = {
-            x: canvas.width,
-            y: ground.y - 60,
-            width: 50,  // הוגדל מ-30
-            height: 60, // הוגדל מ-30
-            type: type,
-            speed: 5,
-            text: foodTypes[getRandomInt(0, foodTypes.length - 1)]
-        };
-    }
-    
-    obstacles.push(obstacle);
-}
+        function createObstacle() {
+            const types = ['person', 'ad', 'food'];
+            const type = types[getRandomInt(0, types.length - 1)];
+            
+            let obstacle;
+            
+            if (type === 'person') {
+                const negativeComments = [
+                    "אתה לא טוב מספיק",
+                    "אתה לא יכול לחסוך",
+                    "זה גדול עליך",
+                    "למה שתצליח?",
+                    "אין לך מספיק משמעת"
+                ];
+                
+                obstacle = {
+                    x: canvas.width,
+                    y: ground.y - 80,
+                    width: 50,
+                    height: 80,
+                    type: type,
+                    speed: 5 + (currentMonth * 0.1), // Increases with time
+                    text: negativeComments[getRandomInt(0, negativeComments.length - 1)],
+                    value: getRandomInt(500, 1000) // Cost if hit
+                };
+            } else if (type === 'ad') {
+                const adTexts = [
+                    "תבזבז!",
+                    "תקנה עכשיו!",
+                    "אתה חייב בגדים חדשים!",
+                    "חופשה מושלמת ב-70% הנחה!",
+                    "קורס שיעזור לך להרוויח יותר!",
+                    "רק קפה קטן, זה לא יזיק לחיסכון!"
+                ];
+                
+                obstacle = {
+                    x: canvas.width,
+                    y: ground.y - 70,
+                    width: 60,
+                    height: 70,
+                    type: type,
+                    speed: 6 + (currentMonth * 0.15),
+                    text: adTexts[getRandomInt(0, adTexts.length - 1)],
+                    value: getRandomInt(1000, 2000)
+                };
+            } else if (type === 'food') {
+                const foodTypes = [
+                    "אוכל יקר במסעדה",
+                    "ממתקים וחטיפים",
+                    "משקאות מוגזים",
+                    "קניות במכולת יקרה",
+                    "משלוחים במקום לבשל"
+                ];
+                
+                obstacle = {
+                    x: canvas.width,
+                    y: ground.y - 60,
+                    width: 50,
+                    height: 60,
+                    type: type,
+                    speed: 4 + (currentMonth * 0.1),
+                    text: foodTypes[getRandomInt(0, foodTypes.length - 1)],
+                    value: getRandomInt(300, 800)
+                };
+            }
+            
+            obstacles.push(obstacle);
+        }
         
         // Create powerup
         function createPowerup() {
-            const types = ['money', 'earlyRise', 'earlySleep', 'healthyFood', 'dailyExercise'];
+            const types = ['money', 'earlyRise', 'earlySleep', 'healthyFood', 'exercise'];
             const type = types[getRandomInt(0, types.length - 1)];
             
             let text = '';
-            let width = 30;
-            let height = 30;
+            let width = 40;
+            let height = 40;
+            let value = 1000;
             
             switch(type) {
                 case 'money':
-                    text = "כסף";
+                    text = "בונוס כספי";
+                    value = getRandomInt(1000, 3000);
                     break;
                 case 'earlyRise':
-                    text = "קימה בבוקר מוקדם";
+                    text = "קימה מוקדם";
                     break;
                 case 'earlySleep':
-                    text = "לישון מוקדם";
+                    text = "שינה מוקדמת";
                     break;
                 case 'healthyFood':
                     text = "אוכל בריא";
                     break;
-                case 'dailyExercise':
+                case 'exercise':
                     text = "אימון יומי";
                     break;
             }
             
             const powerup = {
                 x: canvas.width,
-                y: getRandomInt(ground.y - 150, ground.y - 40),
+                y: getRandomInt(ground.y - 150, ground.y - 60),
                 width: width,
                 height: height,
                 type: type,
                 speed: 5,
-                text: text
+                text: text,
+                value: value
             };
             
             powerups.push(powerup);
@@ -401,46 +540,55 @@ function createObstacle() {
         function createCompanion() {
             const companion = {
                 x: canvas.width,
-                y: ground.y - 50,
-                width: 30,
-                height: 50,
+                y: ground.y - 70,
+                width: 40,
+                height: 70,
                 speed: 5,
                 type: 'companion',
                 text: "אני ארוץ איתך ביחד!"
             };
             
             powerups.push(companion);
+            showPopupMessage("חבר לריצה מתקרב!");
         }
+        
         // Apply powerup effect
-function applyPowerup(powerup) {
-    switch(powerup.type) {
-        case 'money':
-            score += 1000;
-            updateDisplay();
-            break;
-        case 'earlyRise':
-            player.powerUp = true;
-            player.powerUpTime = maxPowerUpTime;
-            break;
-        case 'earlySleep':
-            player.powerUp = true;
-            player.powerUpTime = maxPowerUpTime;
-            break;
-        case 'healthyFood':
-            player.powerUp = true;
-            player.powerUpTime = maxPowerUpTime;
-            break;
-        case 'dailyExercise':
-            player.powerUp = true;
-            player.powerUpTime = maxPowerUpTime;
-            break;
-        case 'companion':
-            player.companion = true;
-            player.powerUp = true;
-            player.powerUpTime = maxPowerUpTime;
-            break;
-    }
-}
+        function applyPowerup(powerup) {
+            stats.powerupsCollected++;
+            
+            switch(powerup.type) {
+                case 'money':
+                    score += powerup.value;
+                    stats.income += powerup.value;
+                    showPopupMessage(`קיבלת ${powerup.value} ש"ח!`, 1500);
+                    updateDisplay();
+                    break;
+                case 'earlyRise':
+                case 'earlySleep':
+                case 'healthyFood':
+                case 'exercise':
+                    player.powerUp = true;
+                    player.powerUpTime = maxPowerUpTime;
+                    player.powerUpType = powerup.type;
+                    document.getElementById('power-meter').style.display = 'block';
+                    showPopupMessage(`חיזוק פעיל: ${powerup.text}!`, 1500);
+                    break;
+                case 'companion':
+                    player.companion = true;
+                    player.powerUp = true;
+                    player.powerUpTime = maxPowerUpTime * 2; // Companion lasts longer
+                    player.powerUpType = 'companion';
+                    document.getElementById('power-meter').style.display = 'block';
+                    showPopupMessage("חבר לריצה מצטרף אליך!", 2000);
+                    break;
+            }
+            
+            // Check achievement
+            if (stats.powerupsCollected >= 10 && !achievements.powerCollector.earned) {
+                achievements.powerCollector.earned = true;
+                addAchievement(achievements.powerCollector.text);
+            }
+        }
         
         // Collision detection
         function checkCollision(obj1, obj2) {
@@ -448,6 +596,45 @@ function applyPowerup(powerup) {
                    obj1.x + obj1.width > obj2.x &&
                    obj1.y < obj2.y + obj2.height &&
                    obj1.y + obj1.height > obj2.y;
+        }
+        
+        // Handle obstacle hit
+        function hitObstacle(obstacle) {
+            if (player.powerUp) {
+                // Player has power-up, can survive hits
+                player.powerUpHits++;
+                
+                if (player.powerUpType === 'companion' || player.powerUpHits < 3) {
+                    // With companion, avoid expense completely
+                    if (player.powerUpType === 'companion') {
+                        showPopupMessage("החבר שלך עזר לך להימנע מהוצאה!", 1500);
+                        stats.obstaclesAvoided++;
+                    } else {
+                        // Still some cost but reduced
+                        const reducedValue = Math.floor(obstacle.value * 0.3);
+                        score -= reducedValue;
+                        stats.expenses += reducedValue;
+                        showPopupMessage(`הוצאת ${reducedValue} ש"ח - פחות בזכות החיזוק!`, 1500);
+                    }
+                    updateDisplay();
+                    return true; // Survived
+                }
+            }
+            
+            // No powerup or too many hits - take full damage
+            score -= obstacle.value;
+            stats.expenses += obstacle.value;
+            
+            showPopupMessage(`הוצאת ${obstacle.value} ש"ח!`, 1500);
+            updateDisplay();
+            
+            // Check if player is now bankrupt
+            if (score < 0) {
+                gameOver(`נגמר הכסף! המכשול האחרון: ${obstacle.text}`);
+                return false;
+            }
+            
+            return true; // Survived but took damage
         }
         
         // Update game state
@@ -460,9 +647,10 @@ function applyPowerup(powerup) {
             if (currentMonthTimer >= framesPerMonth) {
                 currentMonthTimer = 0;
                 currentMonth++;
+                stats.monthsPlayed++;
                 
-                // Add 5000 ILS to score
-                score += 5000;
+                // Add monthly income to score
+                score += stats.income;
                 
                 // Check win condition
                 if (score >= 100000) {
@@ -473,24 +661,37 @@ function applyPowerup(powerup) {
                 // Update display
                 updateDisplay();
                 
-                // Maybe show job offer (20% chance each month)
-                if (Math.random() < 0.2) {
+                // Maybe show job offer (15% chance each month)
+                if (Math.random() < 0.15) {
                     showJobOffer();
                 }
                 
                 // Create monthly powerups
-                const monthlyTypes = ['money', 'earlyRise', 'earlySleep', 'healthyFood', 'dailyExercise'];
+                const monthlyTypes = ['money', 'earlyRise', 'earlySleep', 'healthyFood', 'exercise'];
                 monthlyTypes.forEach(type => {
+                    // Schedule powerups throughout the month
                     setTimeout(() => {
                         createCustomPowerup(type);
-                    }, getRandomInt(1, 10) * 1000);
+                    }, getRandomInt(2, monthDuration * 0.8) * 1000);
                 });
                 
-                // Every 2 months (10 minutes), create a companion powerup
+                // Every 2 months, create a companion powerup
                 if (currentMonth % 2 === 0) {
                     setTimeout(() => {
                         createCompanion();
-                    }, getRandomInt(1, 10) * 1000);
+                    }, getRandomInt(5, monthDuration * 0.8) * 1000);
+                }
+                
+                // First month achievement
+                if (currentMonth === 1 && !achievements.firstMonth.earned) {
+                    achievements.firstMonth.earned = true;
+                    addAchievement(achievements.firstMonth.text);
+                }
+                
+                // Check savings achievement
+                if (score >= 50000 && !achievements.saveHero.earned) {
+                    achievements.saveHero.earned = true;
+                    addAchievement(achievements.saveHero.text);
                 }
             }
             
@@ -509,14 +710,18 @@ function applyPowerup(powerup) {
             // Update powerup status
             if (player.powerUp) {
                 player.powerUpTime--;
+                
+                // Update power meter
+                const powerFill = document.getElementById('power-meter-fill');
+                const powerPercentage = (player.powerUpTime / maxPowerUpTime) * 100;
+                powerFill.style.width = `${Math.min(100, powerPercentage)}%`;
+                
                 if (player.powerUpTime <= 0) {
-                   player.powerUp = false;
-// התאם את גודל השחקן לגודל המסך
-let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
-scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // הגבל בין 0.5 ל-1.5
-player.width = 50 * scaleFactor;
-player.height = 80 * scaleFactor;
-player.powerUpHits = 0;
+                    player.powerUp = false;
+                    player.powerUpHits = 0;
+                    player.companion = false;
+                    document.getElementById('power-meter').style.display = 'none';
+                    showPopupMessage("החיזוק נגמר!", 1500);
                 }
             }
             
@@ -527,14 +732,19 @@ player.powerUpHits = 0;
                 
                 // Check for collision
                 if (checkCollision(player, obstacle)) {
-                    if (player.powerUp && player.powerUpHits < 2) {
-                        // Player has power-up, can survive two hits
-                        player.powerUpHits++;
-                        obstacles.splice(i, 1);
-                    } else {
-                        // Game over
-                        gameOver("נתקלת במכשול: " + obstacle.text);
-                        return;
+                    const survived = hitObstacle(obstacle);
+                    obstacles.splice(i, 1);
+                    
+                    if (!survived) return; // Game over
+                } else if (obstacle.x + obstacle.width < player.x && !obstacle.passed) {
+                    // Player successfully avoided the obstacle
+                    obstacle.passed = true;
+                    stats.obstaclesAvoided++;
+                    
+                    // Check obstacle ninja achievement
+                    if (stats.obstaclesAvoided >= 20 && !achievements.obstacleNinja.earned) {
+                        achievements.obstacleNinja.earned = true;
+                        addAchievement(achievements.obstacleNinja.text);
                     }
                 }
                 
@@ -561,640 +771,609 @@ player.powerUpHits = 0;
                     powerups.splice(i, 1);
                 }
             }
-            
-            // שנה את הסיכוי ליצירת מכשול חדש
-// Maybe create a new obstacle (1% chance per frame)
-if (Math.random() < 0.005) {  // שינוי מ-0.01 ל-0.005
-    // וודא שיש מספיק מרחק מהמכשול האחרון
-    let canCreateObstacle = true;
-    
-    for (let i = 0; i < obstacles.length; i++) {
-        if (obstacles[i].x > canvas.width - 200) {
-            canCreateObstacle = false;
-            break;
-        }
-    }
-    
-    if (canCreateObstacle) {
-        createObstacle();
-    }
-}
-            
-            // Maybe create a new powerup (0.5% chance per frame)
+            // Maybe create a new obstacle (0.5% chance per frame - adjusted for better gameplay)
             if (Math.random() < 0.005) {
-                createPowerup();
+                // Ensure there's enough distance from the last obstacle
+                let canCreateObstacle = true;
+                
+                for (let i = 0; i < obstacles.length; i++) {
+                    if (obstacles[i].x > canvas.width - 250) {
+                        canCreateObstacle = false;
+                        break;
+                    }
+                }
+                
+                if (canCreateObstacle) {
+                    createObstacle();
+                }
+            }
+            
+            // Maybe create a new powerup (0.2% chance per frame)
+            if (Math.random() < 0.002) {
+                // Make sure powerups are spaced out
+                let canCreatePowerup = true;
+                
+                for (let i = 0; i < powerups.length; i++) {
+                    if (powerups[i].x > canvas.width - 300) {
+                        canCreatePowerup = false;
+                        break;
+                    }
+                }
+                
+                if (canCreatePowerup) {
+                    createPowerup();
+                }
+            }
+            
+            // Process any pending obstacles
+            if (pendingObstacles.length > 0 && gameRunning) {
+                const now = Date.now();
+                
+                for (let i = pendingObstacles.length - 1; i >= 0; i--) {
+                    if (now >= pendingObstacles[i].time) {
+                        createObstacle();
+                        pendingObstacles.splice(i, 1);
+                    }
+                }
             }
             
             // Render game
             renderGame();
+            
+            // Update game message time
+            if (gameMessageTime > 0) {
+                gameMessageTime--;
+                if (gameMessageTime <= 0) {
+                    gameMessage = '';
+                }
+            }
         }
         
         // Create a specific type of powerup
-function createCustomPowerup(type) {
-    let text = '';
-    let width = 50;  // הוגדל מ-30
-    let height = 50; // הוגדל מ-30
-    
-    switch(type) {
-        case 'money':
-            text = "כסף";
-            break;
-        case 'earlyRise':
-            text = "קימה בבוקר מוקדם";
-            break;
-        case 'earlySleep':
-            text = "לישון מוקדם";
-            break;
-        case 'healthyFood':
-            text = "אוכל בריא";
-            break;
-        case 'dailyExercise':
-            text = "אימון יומי";
-            break;
-    }
-    
-    const powerup = {
-        x: canvas.width,
-        y: getRandomInt(ground.y - 150, ground.y - 40),
-        width: width,
-        height: height,
-        type: type,
-        speed: 5,
-        text: text
-    };
-    
-    powerups.push(powerup);
-}
-        
-        // Draw powerups
-powerups.forEach(powerup => {
-    switch(powerup.type) {
-        case 'money':
-            ctx.fillStyle = '#FFD700'; // Gold for money
-            break;
-        case 'earlyRise':
-            ctx.fillStyle = '#FFA500'; // Orange for early rise
-            break;
-        case 'earlySleep':
-            ctx.fillStyle = '#8A2BE2'; // Purple for early sleep
-            break;
-        case 'healthyFood':
-            ctx.fillStyle = '#00FF00'; // Green for healthy food
-            break;
-        case 'dailyExercise':
-            ctx.fillStyle = '#FF6347'; // Tomato for exercise
-            break;
-        case 'companion':
-            ctx.fillStyle = '#0000FF'; // Blue for companion
-            break;
-    }
-    ctx.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
-    
-    // Draw text
-    const bubbleWidth = 120;
-    const bubbleHeight = 30;
-    const bubbleX = powerup.x + (powerup.width - bubbleWidth) / 2;
-    const bubbleY = powerup.y - bubbleHeight - 10;
-    
-    // Draw bubble background
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-    ctx.strokeStyle = '#000000';
-    ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-    
-    // Draw text
-    ctx.fillStyle = '#000000';
-    ctx.font = '12px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(powerup.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
-    ctx.textAlign = 'start';
-});
+        function createCustomPowerup(type) {
+            let text = '';
+            let width = 40;
+            let height = 40;
+            let value = 1000;
+            
+            switch(type) {
+                case 'money':
+                    text = "בונוס כספי";
+                    value = getRandomInt(1000, 3000);
+                    break;
+                case 'earlyRise':
+                    text = "קימה מוקדם";
+                    break;
+                case 'earlySleep':
+                    text = "שינה מוקדמת";
+                    break;
+                case 'healthyFood':
+                    text = "אוכל בריא";
+                    break;
+                case 'exercise':
+                    text = "אימון יומי";
+                    break;
+            }
+            
+            const powerup = {
+                x: canvas.width,
+                y: getRandomInt(ground.y - 150, ground.y - 60),
+                width: width,
+                height: height,
+                type: type,
+                speed: 5,
+                text: text,
+                value: value
+            };
+            
+            powerups.push(powerup);
+        }
         
         // Render game
-function renderGame() {
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw sky
-    ctx.fillStyle = '#87CEEB';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw ground
-    ctx.fillStyle = '#8B4513';
-    ctx.fillRect(0, ground.y, ground.width, ground.height);
-    ctx.fillStyle = '#228B22'; // Grass color
-    ctx.fillRect(0, ground.y, ground.width, 10);
-    
-    // Draw player
-    ctx.fillStyle = '#000000';
-    // Head
-    ctx.beginPath();
-    ctx.arc(player.x + player.width/2, player.y + player.width/2, player.width/2, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Body
-    ctx.fillRect(player.x + player.width/4, player.y + player.width, player.width/2, player.height - player.width);
-    
-    // Arms
-    ctx.fillRect(player.x - 5, player.y + player.width + 5, player.width/4, player.height/3);
-    ctx.fillRect(player.x + player.width - player.width/4 + 5, player.y + player.width + 5, player.width/4, player.height/3);
-    
-    // Legs
-    ctx.fillRect(player.x + player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
-    ctx.fillRect(player.x + player.width - player.width/5 - player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
-    
-    // Power-up effect
-    if (player.powerUp) {
-        ctx.strokeStyle = '#FFFF00';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width*0.8, 0, Math.PI * 2);
-        ctx.stroke();
-    }
-    
-    // Draw companion if active
-    if (player.companion && player.powerUp) {
-        // Draw companion
-        ctx.fillStyle = '#0000FF';
-        
-        // Head
-        ctx.beginPath();
-        ctx.arc(player.x - 30, player.y + player.width/2, player.width/2, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Body
-        ctx.fillRect(player.x - 30 - player.width/4, player.y + player.width, player.width/2, player.height - player.width);
-        
-        // Draw speech bubble
-        const bubbleWidth = 100;
-        const bubbleHeight = 30;
-        const bubbleX = player.x - 80;
-        const bubbleY = player.y - 40;
-        
-        // Draw bubble background
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-        ctx.strokeStyle = '#000000';
-        ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-        
-        // Draw text
-        ctx.fillStyle = '#000000';
-        ctx.font = '12px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText("אני איתך!", bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
-        ctx.textAlign = 'start';
-    }
-    
-    // Draw obstacles
-    obstacles.forEach(obstacle => {
-        switch(obstacle.type) {
-            case 'person':
-                // Draw person
-                ctx.fillStyle = '#0000FF';
+        function renderGame() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw sky (gradient for nicer look)
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, ground.y);
+            skyGradient.addColorStop(0, "#1e88e5");
+            skyGradient.addColorStop(1, "#90caf9");
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw clouds
+            drawClouds();
+            
+            // Draw ground
+            const groundGradient = ctx.createLinearGradient(0, ground.y, 0, canvas.height);
+            groundGradient.addColorStop(0, "#8D6E63");
+            groundGradient.addColorStop(0.2, "#A1887F");
+            groundGradient.addColorStop(1, "#6D4C41");
+            ctx.fillStyle = groundGradient;
+            ctx.fillRect(0, ground.y, ground.width, ground.height);
+            
+            // Draw grass
+            ctx.fillStyle = "#43A047";
+            ctx.fillRect(0, ground.y, ground.width, 10);
+            
+            // Draw player
+            ctx.fillStyle = "#000000";
+            // Head
+            ctx.beginPath();
+            ctx.arc(player.x + player.width/2, player.y + player.width/2, player.width/2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Body
+            ctx.fillRect(player.x + player.width/4, player.y + player.width, player.width/2, player.height - player.width);
+            
+            // Arms
+            ctx.fillRect(player.x - 5, player.y + player.width + 5, player.width/4, player.height/3);
+            ctx.fillRect(player.x + player.width - player.width/4 + 5, player.y + player.width + 5, player.width/4, player.height/3);
+            
+            // Legs
+            ctx.fillRect(player.x + player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
+            ctx.fillRect(player.x + player.width - player.width/5 - player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
+            
+            // Power-up effect
+            if (player.powerUp) {
+                let glowColor;
+                
+                switch(player.powerUpType) {
+                    case 'earlyRise':
+                        glowColor = "#FFC107"; // Amber
+                        break;
+                    case 'earlySleep':
+                        glowColor = "#7E57C2"; // Deep Purple
+                        break;
+                    case 'healthyFood':
+                        glowColor = "#4CAF50"; // Green
+                        break;
+                    case 'exercise':
+                        glowColor = "#F44336"; // Red
+                        break;
+                    case 'companion':
+                        glowColor = "#2196F3"; // Blue
+                        break;
+                    default:
+                        glowColor = "#FFEB3B"; // Yellow
+                }
+                
+                ctx.strokeStyle = glowColor;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width*0.8, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // Draw companion if active
+            if (player.companion && player.powerUp) {
+                // Draw companion
+                ctx.fillStyle = "#2196F3"; // Blue
                 
                 // Head
                 ctx.beginPath();
-                ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.width/2, obstacle.width/2, 0, Math.PI * 2);
+                ctx.arc(player.x - 40, player.y + player.width/2, player.width/2, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Body
-                ctx.fillRect(obstacle.x + obstacle.width/4, obstacle.y + obstacle.width, obstacle.width/2, obstacle.height - obstacle.width);
+                ctx.fillRect(player.x - 40 - player.width/4, player.y + player.width, player.width/2, player.height - player.width);
                 
-                // Arms
-                ctx.fillRect(obstacle.x - 5, obstacle.y + obstacle.width + 5, obstacle.width/4, obstacle.height/3);
-                ctx.fillRect(obstacle.x + obstacle.width - obstacle.width/4 + 5, obstacle.y + obstacle.width + 5, obstacle.width/4, obstacle.height/3);
+                // Draw speech bubble
+                const bubbleWidth = 100;
+                const bubbleHeight = 30;
+                const bubbleX = player.x - 90;
+                const bubbleY = player.y - 40;
                 
-                // Legs
-                ctx.fillRect(obstacle.x + obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
-                ctx.fillRect(obstacle.x + obstacle.width - obstacle.width/5 - obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
-                break;
+                // Draw bubble background
+                ctx.fillStyle = "#FFFFFF";
+                ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+                ctx.strokeStyle = "#000000";
+                ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
                 
-            case 'ad':
-                // Draw ad
-                ctx.fillStyle = '#FF00FF';
-                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-                
-                // Draw ad icon
-                ctx.fillStyle = '#FFFFFF';
-                ctx.font = '20px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText("$", obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2 + 7);
-                ctx.textAlign = 'start';
-                break;
-                
-            case 'food':
-                switch(obstacle.text) {
-                    case "שמן קנולה":
-                        // Draw oil bottle
-                        ctx.fillStyle = '#FFD700';
-                        ctx.fillRect(obstacle.x + 10, obstacle.y, obstacle.width - 20, obstacle.height);
-                        ctx.fillRect(obstacle.x + 15, obstacle.y - 10, obstacle.width - 30, 10);
+                // Draw text
+                ctx.fillStyle = "#000000";
+                ctx.font = "12px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("אני איתך!", bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
+                ctx.textAlign = "start";
+            }
+            
+            // Draw obstacles
+            obstacles.forEach(obstacle => {
+                switch(obstacle.type) {
+                    case 'person':
+                        // Draw person
+                        ctx.fillStyle = "#3F51B5"; // Indigo
                         
-                        // Draw label
-                        ctx.fillStyle = '#FFFFFF';
-                        ctx.fillRect(obstacle.x + 15, obstacle.y + 10, obstacle.width - 30, obstacle.height / 2);
+                        // Head
+                        ctx.beginPath();
+                        ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.width/2, obstacle.width/2, 0, Math.PI * 2);
+                        ctx.fill();
                         
-                        // Draw text on label
-                        ctx.fillStyle = '#000000';
-                        ctx.font = '10px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.fillText("שמן", obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/3);
-                        ctx.textAlign = 'start';
+                        // Body
+                        ctx.fillRect(obstacle.x + obstacle.width/4, obstacle.y + obstacle.width, obstacle.width/2, obstacle.height - obstacle.width);
+                        
+                        // Arms
+                        ctx.fillRect(obstacle.x - 5, obstacle.y + obstacle.width + 5, obstacle.width/4, obstacle.height/3);
+                        ctx.fillRect(obstacle.x + obstacle.width - obstacle.width/4 + 5, obstacle.y + obstacle.width + 5, obstacle.width/4, obstacle.height/3);
+                        
+                        // Legs
+                        ctx.fillRect(obstacle.x + obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
+                        ctx.fillRect(obstacle.x + obstacle.width - obstacle.width/5 - obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
                         break;
                         
-                    case "ממתקים":
-                        // Draw candy
-                        ctx.fillStyle = '#FF69B4';
+                    case 'ad':
+                        // Draw ad
+                        ctx.fillStyle = "#E91E63"; // Pink
+                        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                        
+                        // Draw ad icon
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.font = "20px Arial";
+                        ctx.textAlign = "center";
+                        ctx.fillText("$", obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2 + 7);
+                        ctx.textAlign = "start";
+                        break;
+                        
+                    case 'food':
+                        // Draw food item
+                        ctx.fillStyle = "#FF9800"; // Orange
                         ctx.beginPath();
                         ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2, obstacle.width/2, 0, Math.PI * 2);
                         ctx.fill();
                         
-                        ctx.strokeStyle = '#FFFFFF';
+                        // Add some details to make it look like food
+                        ctx.strokeStyle = "#FFFFFF";
+                        ctx.lineWidth = 2;
                         ctx.beginPath();
-                        ctx.moveTo(obstacle.x + 10, obstacle.y + 10);
-                        ctx.lineTo(obstacle.x + obstacle.width - 10, obstacle.y + obstacle.height - 10);
+                        ctx.moveTo(obstacle.x + 10, obstacle.y + obstacle.height/2);
+                        ctx.lineTo(obstacle.x + obstacle.width - 10, obstacle.y + obstacle.height/2);
                         ctx.stroke();
                         
                         ctx.beginPath();
-                        ctx.moveTo(obstacle.x + obstacle.width - 10, obstacle.y + 10);
-                        ctx.lineTo(obstacle.x + 10, obstacle.y + obstacle.height - 10);
-                        ctx.stroke();
-                        break;
-                        
-                    case "המבורגר":
-                        // Draw burger
-                        // Bottom bun
-                        ctx.fillStyle = '#CD853F';
-                        ctx.beginPath();
-                        ctx.ellipse(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height - 10, obstacle.width/2, obstacle.height/6, 0, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        // Patty
-                        ctx.fillStyle = '#8B4513';
-                        ctx.beginPath();
-                        ctx.ellipse(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2, obstacle.width/2, obstacle.height/6, 0, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        // Top bun
-                        ctx.fillStyle = '#CD853F';
-                        ctx.beginPath();
-                        ctx.ellipse(obstacle.x + obstacle.width/2, obstacle.y + 10, obstacle.width/2, obstacle.height/4, 0, 0, Math.PI * 2);
-                        ctx.fill();
-                        break;
-                        
-                    case "קפה":
-                        // Draw coffee cup
-                        // Cup
-                        ctx.fillStyle = '#8B4513';
-                        ctx.fillRect(obstacle.x + 5, obstacle.y + 10, obstacle.width - 10, obstacle.height - 15);
-                        
-                        // Handle
-                        ctx.beginPath();
-                        ctx.arc(obstacle.x + obstacle.width, obstacle.y + obstacle.height/2, obstacle.width/4, Math.PI * 1.5, Math.PI * 0.5);
-                        ctx.stroke();
-                        
-                        // Coffee
-                        ctx.fillStyle = '#4B3621';
-                        ctx.fillRect(obstacle.x + 10, obstacle.y + 15, obstacle.width - 20, obstacle.height/2);
-                        
-                        // Steam
-                        ctx.strokeStyle = '#FFFFFF';
-                        ctx.beginPath();
-                        ctx.moveTo(obstacle.x + obstacle.width/2 - 10, obstacle.y + 5);
-                        ctx.lineTo(obstacle.x + obstacle.width/2 - 15, obstacle.y - 5);
-                        ctx.stroke();
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(obstacle.x + obstacle.width/2, obstacle.y + 5);
-                        ctx.lineTo(obstacle.x + obstacle.width/2, obstacle.y - 10);
-                        ctx.stroke();
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(obstacle.x + obstacle.width/2 + 10, obstacle.y + 5);
-                        ctx.lineTo(obstacle.x + obstacle.width/2 + 15, obstacle.y - 5);
+                        ctx.moveTo(obstacle.x + obstacle.width/2, obstacle.y + 10);
+                        ctx.lineTo(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height - 10);
                         ctx.stroke();
                         break;
                         
                     default:
-                        // Default food icon (apple)
-                        ctx.fillStyle = '#FF0000';
+                        // Default obstacle
+                        ctx.fillStyle = "#9E9E9E"; // Grey
+                        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                        break;
+                }
+                
+                // Draw speech bubble if there is text
+                if (obstacle.text && obstacle.type !== 'default') {
+                    const bubbleWidth = 120;
+                    const bubbleHeight = 40;
+                    const bubbleX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
+                    const bubbleY = obstacle.y - bubbleHeight - 10;
+                    
+                    // Draw bubble background
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+                    ctx.strokeStyle = "#000000";
+                    ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+                    
+                    // Draw text
+                    ctx.fillStyle = "#000000";
+                    ctx.font = "12px Arial";
+                    ctx.textAlign = "center";
+                    
+                    // Handle text wrapping for longer text
+                    if (obstacle.text.length > 15) {
+                        const words = obstacle.text.split(' ');
+                        let line = '';
+                        let y = bubbleY + 15;
+                        
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = line + words[i] + ' ';
+                            
+                            if (i === words.length - 1 || testLine.length > 15) {
+                                ctx.fillText(line, bubbleX + bubbleWidth/2, y);
+                                line = words[i] + ' ';
+                                y += 15;
+                            } else {
+                                line = testLine;
+                            }
+                        }
+                        
+                        if (line.length > 0) {
+                            ctx.fillText(line, bubbleX + bubbleWidth/2, y);
+                        }
+                    } else {
+                        ctx.fillText(obstacle.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
+                    }
+                    
+                    ctx.textAlign = "start";
+                }
+            });
+            
+            // Draw powerups
+            powerups.forEach(powerup => {
+                let fillColor;
+                
+                switch(powerup.type) {
+                    case 'money':
+                        fillColor = "#FFD700"; // Gold
+                        break;
+                    case 'earlyRise':
+                        fillColor = "#FFC107"; // Amber
+                        break;
+                    case 'earlySleep':
+                        fillColor = "#7E57C2"; // Deep Purple
+                        break;
+                    case 'healthyFood':
+                        fillColor = "#4CAF50"; // Green
+                        break;
+                    case 'exercise':
+                        fillColor = "#F44336"; // Red
+                        break;
+                    case 'companion':
+                        fillColor = "#2196F3"; // Blue
+                        break;
+                    default:
+                        fillColor = "#FFEB3B"; // Yellow
+                }
+                
+                // Draw the powerup with different shapes based on type
+                if (powerup.type === 'money') {
+                    // Draw coin for money
+                    ctx.fillStyle = fillColor;
+                    ctx.beginPath();
+                    ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2, powerup.width/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Dollar sign
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.font = "20px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText("₪", powerup.x + powerup.width/2, powerup.y + powerup.height/2 + 7);
+                    ctx.textAlign = "start";
+                } else if (powerup.type === 'companion') {
+                    // Draw friendly character
+                    ctx.fillStyle = fillColor;
+                    
+                    // Head
+                    ctx.beginPath();
+                    ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/3, powerup.width/2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Body - heart shape
+                    ctx.beginPath();
+                    ctx.moveTo(powerup.x + powerup.width/2, powerup.y + powerup.height);
+                    ctx.bezierCurveTo(
+                        powerup.x + powerup.width, powerup.y + powerup.height * 0.6,
+                        powerup.x + powerup.width, powerup.y + powerup.height * 0.4,
+                        powerup.x + powerup.width/2, powerup.y + powerup.height * 0.5
+                    );
+                    ctx.bezierCurveTo(
+                        powerup.x, powerup.y + powerup.height * 0.4,
+                        powerup.x, powerup.y + powerup.height * 0.6,
+                        powerup.x + powerup.width/2, powerup.y + powerup.height
+                    );
+                    ctx.fill();
+                } else {
+                    // Draw other powerups
+                    ctx.fillStyle = fillColor;
+                    
+                    // Different shapes for different powerups
+                    if (powerup.type === 'earlyRise') {
+                        // Sun shape for early rise
+                        const centerX = powerup.x + powerup.width/2;
+                        const centerY = powerup.y + powerup.height/2;
+                        const radius = powerup.width/2.5;
+                        
+                        // Sun circle
                         ctx.beginPath();
-                        ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2, obstacle.width/2, 0, Math.PI * 2);
+                        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Sun rays
+                        ctx.strokeStyle = fillColor;
+                        ctx.lineWidth = 3;
+                        for (let i = 0; i < 8; i++) {
+                            const angle = i * Math.PI / 4;
+                            const rayLength = radius * 0.7;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(
+                                centerX + Math.cos(angle) * radius,
+                                centerY + Math.sin(angle) * radius
+                            );
+                            ctx.lineTo(
+                                centerX + Math.cos(angle) * (radius + rayLength),
+                                centerY + Math.sin(angle) * (radius + rayLength)
+                            );
+                            ctx.stroke();
+                        }
+                    } else if (powerup.type === 'earlySleep') {
+                        // Moon shape for early sleep
+                        ctx.beginPath();
+                        ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2, powerup.width/2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Inner cut to make crescent
+                        ctx.globalCompositeOperation = 'destination-out';
+                        ctx.beginPath();
+                        ctx.arc(powerup.x + powerup.width/2 + powerup.width/4, powerup.y + powerup.height/2, powerup.width/2.2, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.globalCompositeOperation = 'source-over';
+                    } else if (powerup.type === 'healthyFood') {
+                        // Apple shape for healthy food
+                        ctx.beginPath();
+                        ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2 + powerup.height/10, powerup.width/2, 0, Math.PI * 2);
                         ctx.fill();
                         
                         // Stem
-                        ctx.fillStyle = '#8B4513';
-                        ctx.fillRect(obstacle.x + obstacle.width/2 - 2, obstacle.y + 5, 4, 10);
+                        ctx.fillStyle = "#8D6E63";
+                        ctx.fillRect(powerup.x + powerup.width/2 - 2, powerup.y + powerup.height/10, 4, 10);
                         
                         // Leaf
-                        ctx.fillStyle = '#00FF00';
+                        ctx.fillStyle = "#81C784";
                         ctx.beginPath();
-                        ctx.ellipse(obstacle.x + obstacle.width/2 + 10, obstacle.y + 10, 8, 5, Math.PI/4, 0, Math.PI * 2);
+                        ctx.ellipse(powerup.x + powerup.width/2 + 10, powerup.y + powerup.height/5, 8, 5, Math.PI/4, 0, Math.PI * 2);
                         ctx.fill();
-                        break;
+                    } else if (powerup.type === 'exercise') {
+                        // Dumbbell for exercise
+                        ctx.fillStyle = "#78909C";
+                        
+                        // Left weight
+                        ctx.beginPath();
+                        ctx.arc(powerup.x + powerup.width * 0.2, powerup.y + powerup.height/2, powerup.width * 0.15, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Right weight
+                        ctx.beginPath();
+                        ctx.arc(powerup.x + powerup.width * 0.8, powerup.y + powerup.height/2, powerup.width * 0.15, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Handle
+                        ctx.fillRect(powerup.x + powerup.width * 0.2, powerup.y + powerup.height/2 - 5, powerup.width * 0.6, 10);
+                    } else {
+                        // Default star shape for other powerups
+                        const cx = powerup.x + powerup.width/2;
+                        const cy = powerup.y + powerup.height/2;
+                        const spikes = 5;
+                        const outerRadius = powerup.width/2;
+                        const innerRadius = powerup.width/4;
+                        
+                        ctx.beginPath();
+                        let rot = Math.PI / 2 * 3;
+                        let x = cx;
+                        let y = cy;
+                        const step = Math.PI / spikes;
+                        
+                        ctx.moveTo(cx, cy - outerRadius);
+                        for (let i = 0; i < spikes; i++) {
+                            x = cx + Math.cos(rot) * outerRadius;
+                            y = cy + Math.sin(rot) * outerRadius;
+                            ctx.lineTo(x, y);
+                            rot += step;
+                            
+                            x = cx + Math.cos(rot) * innerRadius;
+                            y = cy + Math.sin(rot) * innerRadius;
+                            ctx.lineTo(x, y);
+                            rot += step;
+                        }
+                        ctx.lineTo(cx, cy - outerRadius);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
                 }
-                break;
                 
-            case 'morning':
-                // Draw sun for morning power-up
-                const centerX = obstacle.x + obstacle.width/2;
-                const centerY = obstacle.y + obstacle.height/2;
-                const radius = Math.min(obstacle.width, obstacle.height) * 0.4;
+                // Draw text bubble
+                const bubbleWidth = 120;
+                const bubbleHeight = 30;
+                const bubbleX = powerup.x + (powerup.width - bubbleWidth) / 2;
+                const bubbleY = powerup.y - bubbleHeight - 10;
                 
-                // Sun circle
-                ctx.fillStyle = '#FFCC00';
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-                ctx.fill();
+                // Draw bubble background
+                ctx.fillStyle = "#FFFFFF";
+                ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+                ctx.strokeStyle = "#000000";
+                ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
                 
-                // Sun rays
-                ctx.strokeStyle = '#FFCC00';
-                ctx.lineWidth = 3;
-                for (let i = 0; i < 8; i++) {
-                    const angle = i * Math.PI / 4;
-                    const rayLength = radius * 0.7;
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(
-                        centerX + Math.cos(angle) * radius,
-                        centerY + Math.sin(angle) * radius
-                    );
-                    ctx.lineTo(
-                        centerX + Math.cos(angle) * (radius + rayLength),
-                        centerY + Math.sin(angle) * (radius + rayLength)
-                    );
-                    ctx.stroke();
-                }
-                break;
-                
-            case 'phone':
-                // Draw phone
-                ctx.fillStyle = '#000000';
-                ctx.fillRect(obstacle.x + 5, obstacle.y + 5, obstacle.width - 10, obstacle.height - 10);
-                
-                // Screen
-                ctx.fillStyle = '#4169E1';
-                ctx.fillRect(obstacle.x + 10, obstacle.y + 10, obstacle.width - 20, obstacle.height - 30);
-                
-                // Home button
-                ctx.fillStyle = '#FFFFFF';
-                ctx.beginPath();
-                ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height - 15, 5, 0, Math.PI * 2);
-                ctx.fill();
-                break;
-                
-            default:
-                // Default obstacle
-                ctx.fillStyle = '#888888';
-                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-                break;
+                // Draw text
+                ctx.fillStyle = "#000000";
+                ctx.font = "12px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(powerup.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
+                ctx.textAlign = "start";
+            });
+            
+            // Draw month progress bar
+            const progressWidth = 300;
+            const progressHeight = 10;
+            const progressX = (canvas.width - progressWidth) / 2;
+            const progressY = 40;
+            
+            // Background
+            ctx.fillStyle = "#E0E0E0";
+            ctx.fillRect(progressX, progressY, progressWidth, progressHeight);
+            
+            // Progress
+            const progress = currentMonthTimer / framesPerMonth;
+            ctx.fillStyle = "#4CAF50";
+            ctx.fillRect(progressX, progressY, progressWidth * progress, progressHeight);
+            
+            // Border
+            ctx.strokeStyle = "#000000";
+            ctx.strokeRect(progressX, progressY, progressWidth, progressHeight);
+            
+            // Draw game messages if any
+            if (gameMessage && gameMessageTime > 0) {
+                const alpha = Math.min(1, gameMessageTime / 100);
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = "#000000";
+                ctx.font = "24px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(gameMessage, canvas.width/2, canvas.height/2);
+                ctx.textAlign = "start";
+                ctx.globalAlpha = 1.0;
+            }
         }
         
-        // Draw speech bubble if there is text
-        // טקסט סטטי - לא זז עם המכשול
-if (obstacle.text && obstacle.type !== 'food') {
-    const bubbleWidth = 100;
-    const bubbleHeight = 30;
-    const fixedY = obstacle.y - bubbleHeight - 10;
-    const fixedX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
-    
-    // צור מסגרת לבנה
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(fixedX, fixedY, bubbleWidth, bubbleHeight);
-    ctx.strokeStyle = '#000000';
-    ctx.strokeRect(fixedX, fixedY, bubbleWidth, bubbleHeight);
-    
-    // כתוב את הטקסט
-    ctx.fillStyle = '#000000';
-    ctx.font = '12px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(obstacle.text, fixedX + bubbleWidth/2, fixedY + bubbleHeight/2 + 4);
-    ctx.textAlign = 'start';
-}
+        // Draw decorative clouds
+        function drawClouds() {
+            ctx.fillStyle = "#FFFFFF";
+            
+            // Create cloud positions based on time
+            const time = Date.now() / 10000;
+            
+            // Draw 3-5 clouds at different positions
+            for (let i = 0; i < 5; i++) {
+                const x = ((i * 300) + time * 30) % canvas.width;
+                const y = 50 + i * 20;
+                const scale = 0.5 + (i % 3) * 0.2;
+                
+                // Draw cloud shape
+                drawCloud(x, y, scale);
+            }
         }
-    });
-    
-    // Draw powerups
-powerups.forEach(powerup => {
-        switch(powerUp.type) {
-            case 'morning':
-                // Draw sun icon for morning power-up
-                const centerX = powerUp.x + powerUp.width/2;
-                const centerY = powerUp.y + powerUp.height/2;
-                const radius = Math.min(powerUp.width, powerUp.height) * 0.4;
-                
-                // Sun circle
-                ctx.fillStyle = '#FFCC00';
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Sun rays
-                ctx.strokeStyle = '#FFCC00';
-                ctx.lineWidth = 3;
-                for (let i = 0; i < 8; i++) {
-                    const angle = i * Math.PI / 4;
-                    const rayLength = radius * 0.7;
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(
-                        centerX + Math.cos(angle) * radius,
-                        centerY + Math.sin(angle) * radius
-                    );
-                    ctx.lineTo(
-                        centerX + Math.cos(angle) * (radius + rayLength),
-                        centerY + Math.sin(angle) * (radius + rayLength)
-                    );
-                    ctx.stroke();
-                }
-                break;
-                
-            case 'exercise':
-                // Draw dumbbell for exercise power-up
-                ctx.fillStyle = '#888888';
-                
-                // Left weight
-                ctx.beginPath();
-                ctx.arc(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height/2, powerUp.width * 0.15, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Right weight
-                ctx.beginPath();
-                ctx.arc(powerUp.x + powerUp.width * 0.8, powerUp.y + powerUp.height/2, powerUp.width * 0.15, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Handle
-                ctx.fillRect(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height/2 - 5, powerUp.width * 0.6, 10);
-                break;
-                
-            case 'meditation':
-                // Draw meditation icon
-                ctx.fillStyle = '#9370DB'; // Medium purple
-                
-                // Person sitting
-                ctx.beginPath();
-                ctx.arc(powerUp.x + powerUp.width/2, powerUp.y + powerUp.height * 0.3, powerUp.width * 0.2, 0, Math.PI * 2); // Head
-                ctx.fill();
-                
-                // Body (triangle shape for sitting person)
-                ctx.beginPath();
-                ctx.moveTo(powerUp.x + powerUp.width/2, powerUp.y + powerUp.height * 0.4);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.3, powerUp.y + powerUp.height * 0.9);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.7, powerUp.y + powerUp.height * 0.9);
-                ctx.closePath();
-                ctx.fill();
-                
-                // Aura
-                ctx.strokeStyle = '#9370DB';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(powerUp.x + powerUp.width/2, powerUp.y + powerUp.height/2, powerUp.width * 0.45, 0, Math.PI * 2);
-                ctx.stroke();
-                break;
-                
-            case 'water':
-                // Draw water glass
-                // Glass outline
-                ctx.strokeStyle = '#87CEFA'; // Light sky blue
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(powerUp.x + powerUp.width * 0.3, powerUp.y + powerUp.height * 0.2);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height * 0.8);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.8, powerUp.y + powerUp.height * 0.8);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.7, powerUp.y + powerUp.height * 0.2);
-                ctx.closePath();
-                ctx.stroke();
-                
-                // Water inside
-                ctx.fillStyle = '#87CEFA';
-                ctx.beginPath();
-                ctx.moveTo(powerUp.x + powerUp.width * 0.25, powerUp.y + powerUp.height * 0.5);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.2, powerUp.y + powerUp.height * 0.8);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.8, powerUp.y + powerUp.height * 0.8);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.75, powerUp.y + powerUp.height * 0.5);
-                ctx.closePath();
-                ctx.fill();
-                
-                // Water drops
-                ctx.beginPath();
-                ctx.arc(powerUp.x + powerUp.width * 0.4, powerUp.y + powerUp.height * 0.3, 3, 0, Math.PI * 2);
-                ctx.arc(powerUp.x + powerUp.width * 0.6, powerUp.y + powerUp.height * 0.4, 3, 0, Math.PI * 2);
-                ctx.fill();
-                break;
-                
-            case 'friendship':
-                // Draw friendship icon (two holding hands)
-                ctx.fillStyle = '#FFC0CB'; // Pink
-                
-                // First person
-                ctx.beginPath();
-                ctx.arc(powerUp.x + powerUp.width * 0.3, powerUp.y + powerUp.height * 0.3, powerUp.width * 0.15, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.fillRect(powerUp.x + powerUp.width * 0.25, powerUp.y + powerUp.height * 0.45, powerUp.width * 0.1, powerUp.height * 0.3);
-                
-                // Second person
-                ctx.fillStyle = '#87CEEB'; // Sky blue
-                ctx.beginPath();
-                ctx.arc(powerUp.x + powerUp.width * 0.7, powerUp.y + powerUp.height * 0.3, powerUp.width * 0.15, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.fillRect(powerUp.x + powerUp.width * 0.65, powerUp.y + powerUp.height * 0.45, powerUp.width * 0.1, powerUp.height * 0.3);
-                
-                // Holding hands
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(powerUp.x + powerUp.width * 0.35, powerUp.y + powerUp.height * 0.55);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.5, powerUp.y + powerUp.height * 0.65);
-                ctx.lineTo(powerUp.x + powerUp.width * 0.65, powerUp.y + powerUp.height * 0.55);
-                ctx.stroke();
-                break;
-                
-            default:
-                // Default power-up (star)
-                ctx.fillStyle = '#FFFF00';
-                const cx = powerUp.x + powerUp.width/2;
-                const cy = powerUp.y + powerUp.height/2;
-                const spikes = 5;
-                const outerRadius = powerUp.width/2;
-                const innerRadius = powerUp.width/4;
-                
-                ctx.beginPath();
-                let rot = Math.PI / 2 * 3;
-                let x = cx;
-                let y = cy;
-                const step = Math.PI / spikes;
-                
-                ctx.moveTo(cx, cy - outerRadius);
-                for (let i = 0; i < spikes; i++) {
-                    x = cx + Math.cos(rot) * outerRadius;
-                    y = cy + Math.sin(rot) * outerRadius;
-                    ctx.lineTo(x, y);
-                    rot += step;
-                    
-                    x = cx + Math.cos(rot) * innerRadius;
-                    y = cy + Math.sin(rot) * innerRadius;
-                    ctx.lineTo(x, y);
-                    rot += step;
-                }
-                ctx.lineTo(cx, cy - outerRadius);
-                ctx.closePath();
-                ctx.fill();
-                break;
+        
+        // Helper to draw a single cloud
+        function drawCloud(x, y, scale) {
+            const radiusX = 30 * scale;
+            const radiusY = 20 * scale;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, radiusX, 0, Math.PI * 2);
+            ctx.arc(x + radiusX, y - radiusY, radiusX, 0, Math.PI * 2);
+            ctx.arc(x + radiusX * 2, y, radiusX, 0, Math.PI * 2);
+            ctx.arc(x + radiusX, y + radiusY, radiusX, 0, Math.PI * 2);
+            ctx.fill();
         }
-    });
-    
-    // Draw score and other UI elements
-    ctx.fillStyle = '#000000';
-    ctx.font = '18px Arial';
-    ctx.fillText(`ניקוד: ${score}`, 20, 30);
-    
-    // Draw power-up meter if active
-    if (player.powerUp) {
-        const meterWidth = 200;
-        const meterHeight = 15;
-        const meterX = canvas.width - meterWidth - 20;
-        const meterY = 20;
         
-        // Draw meter background
-        ctx.fillStyle = '#CCCCCC';
-        ctx.fillRect(meterX, meterY, meterWidth, meterHeight);
-        
-        // Calculate remaining time as a percentage
-        const remainingPercent = player.powerUpTime / maxPowerUpTime;
-        
-        // Draw meter fill
-        ctx.fillStyle = '#FFFF00';
-        ctx.fillRect(meterX, meterY, meterWidth * remainingPercent, meterHeight);
-        
-        // Draw meter border
-        ctx.strokeStyle = '#000000';
-        ctx.strokeRect(meterX, meterY, meterWidth, meterHeight);
-        
-        // Draw label
-        ctx.fillStyle = '#000000';
-        ctx.font = '12px Arial';
-        ctx.fillText('זמן חיזוק', meterX + meterWidth + 5, meterY + meterHeight/2 + 4);
-    }
-    
-    // Draw game messages if any
-    if (gameMessage && gameMessageTime > 0) {
-        const alpha = Math.min(1, gameMessageTime / 100);
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = '#000000';
-        ctx.font = '24px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(gameMessage, canvas.width/2, canvas.height/2);
-        ctx.textAlign = 'start';
-        ctx.globalAlpha = 1.0;
-    }
-}
+        // Add achievement notification
+        function addAchievement(text) {
+            const achievementsDiv = document.getElementById('achievements');
+            const achievement = document.createElement('div');
+            achievement.className = 'achievement';
+            achievement.textContent = text;
+            achievementsDiv.appendChild(achievement);
+            
+            // Show achievements panel
+            achievementsDiv.style.display = 'block';
+            
+            // Display popup message
+            showPopupMessage(`הישג חדש: ${text}!`, 3000);
+            
+            // Add some bonus points
+            score += 1000;
+            updateDisplay();
+        }
         
         // Update display
         function updateDisplay() {
             document.getElementById('score-display').textContent = `חיסכון: ${score.toLocaleString()} ש"ח`;
             document.getElementById('date-display').textContent = monthNames[currentMonth];
+            
+            // Update monthly stats
+            document.getElementById('expenses').textContent = stats.expenses.toLocaleString();
+            document.getElementById('income').textContent = stats.income.toLocaleString();
+            document.getElementById('monthly-stats').style.display = 'block';
         }
         
         // Show job offer
@@ -1216,12 +1395,24 @@ powerups.forEach(powerup => {
             gameRunning = false;
             document.getElementById('game-over-reason').textContent = reason;
             document.getElementById('final-score').textContent = score.toLocaleString();
+            
+            // Update game stats
+            document.getElementById('months-played').textContent = stats.monthsPlayed;
+            document.getElementById('powerups-collected').textContent = stats.powerupsCollected;
+            document.getElementById('obstacles-avoided').textContent = stats.obstaclesAvoided;
+            
             document.getElementById('game-over').style.display = 'block';
         }
         
         // Win game
         function winGame() {
             gameRunning = false;
+            
+            // Update win stats
+            document.getElementById('win-months').textContent = stats.monthsPlayed;
+            document.getElementById('win-powerups').textContent = stats.powerupsCollected;
+            document.getElementById('win-obstacles').textContent = stats.obstaclesAvoided;
+            
             document.getElementById('win-screen').style.display = 'block';
         }
         
@@ -1234,62 +1425,142 @@ powerups.forEach(powerup => {
             currentMonthTimer = 0;
             obstacles = [];
             powerups = [];
+            pendingObstacles = [];
+            
+            // Reset stats
+            stats = {
+                monthsPlayed: 0,
+                powerupsCollected: 0,
+                obstaclesAvoided: 0,
+                expenses: 0,
+                income: 5000
+            };
+            
+            // Reset achievements
+            achievements = {
+                firstMonth: { earned: false, text: "הישרדות חודש ראשון" },
+                saveHero: { earned: false, text: "חסכת 50,000 ש\"ח" },
+                powerCollector: { earned: false, text: "אספת 10 חיזוקים" },
+                obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" }
+            };
             
             // Reset player
-player.jumping = false;
-player.jumpVelocity = 0;
-player.powerUp = false;
-player.powerUpTime = 0;
-player.powerUpHits = 0;
-player.companion = false;
-
-// התאם את גודל השחקן לגודל המסך
-let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
-scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // הגבל בין 0.5 ל-1.5
-player.width = 50 * scaleFactor;
-player.height = 80 * scaleFactor;
-
-// עדכן את מיקום השחקן לאחר שינוי הגודל
-player.y = ground.y - player.height;
+            player.jumping = false;
+            player.jumpVelocity = 0;
+            player.powerUp = false;
+            player.powerUpTime = 0;
+            player.powerUpHits = 0;
+            player.companion = false;
+            
+            // Adjust player size based on screen dimensions
+            let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
+            scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // Limit between 0.5 and 1.5
+            player.width = 50 * scaleFactor;
+            player.height = 80 * scaleFactor;
+            
+            // Update player position after size change
+            player.y = ground.y - player.height;
             
             // Reset displays
             updateDisplay();
+            
+            // Clear achievements
+            document.getElementById('achievements').innerHTML = '';
+            document.getElementById('achievements').style.display = 'none';
+            
+            // Hide power meter
+            document.getElementById('power-meter').style.display = 'none';
             
             // Hide all dialogs
             document.getElementById('job-offer').style.display = 'none';
             document.getElementById('job-offer-followup').style.display = 'none';
             document.getElementById('game-over').style.display = 'none';
             document.getElementById('win-screen').style.display = 'none';
+            document.getElementById('tutorial-message').style.display = 'none';
         }
-        
         // Jump function
         function jump() {
             if (!player.jumping) {
                 player.jumping = true;
                 player.jumpVelocity = -player.jumpPower;
+                
+                // Play jump sound
+                try {
+                    const jumpSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU92T18=');
+                    jumpSound.volume = 0.2;
+                    jumpSound.play().catch(e => console.log('Audio play failed:', e));
+                } catch (e) {
+                    console.log('Audio creation failed:', e);
+                }
             }
         }
         
         // Handle window resize
-        window.addEventListener('resize', function() {
+        function handleResize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            
             ground.y = canvas.height * 0.8;
             ground.width = canvas.width;
             ground.height = canvas.height * 0.2;
+            
+            // Adjust player size and position based on screen dimensions
+            let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
+            scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // Limit between 0.5 and 1.5
+            
+            player.width = 50 * scaleFactor;
+            player.height = 80 * scaleFactor;
             player.y = ground.y - player.height;
-        });
+            
+            // Adjust jump power for screen size
+            player.jumpPower = 15 * scaleFactor;
+        }
+        
+        // Start game
+        function startGame() {
+            // Initialize the game
+            resetGame();
+            
+            // Handle resize event
+            window.removeEventListener('resize', handleResize);
+            window.addEventListener('resize', handleResize);
+            handleResize();
+            
+            // Show tutorial initially
+            tutorialShown = true;
+            document.getElementById('tutorial-message').style.display = 'block';
+            
+            // Game loop - run at 60fps
+            const gameLoop = setInterval(() => {
+                if (gameRunning) {
+                    updateGame();
+                }
+            }, frameTime);
+        }
         
         // Event listeners
         document.addEventListener('keydown', function(event) {
             if (event.code === 'Space') {
+                if (tutorialShown) {
+                    tutorialShown = false;
+                    document.getElementById('tutorial-message').style.display = 'none';
+                    return;
+                }
+                
                 if (gameRunning && !gamePaused) {
                     jump();
                 }
             }
         });
         
+        // Canvas click events
         canvas.addEventListener('click', function() {
+            if (tutorialShown) {
+                tutorialShown = false;
+                document.getElementById('tutorial-message').style.display = 'none';
+                return;
+            }
+            
             if (gameRunning && !gamePaused) {
                 jump();
             }
@@ -1298,14 +1569,27 @@ player.y = ground.y - player.height;
         // Touch events for mobile
         canvas.addEventListener('touchstart', function(event) {
             event.preventDefault();
+            
+            if (tutorialShown) {
+                tutorialShown = false;
+                document.getElementById('tutorial-message').style.display = 'none';
+                return;
+            }
+            
             if (gameRunning && !gamePaused) {
                 jump();
             }
         });
         
+        // Start button click
+        document.getElementById('start-btn').addEventListener('click', function() {
+            tutorialShown = false;
+            document.getElementById('tutorial-message').style.display = 'none';
+        });
+        
         // Job offer buttons
         document.getElementById('yes-btn').addEventListener('click', function() {
-            gameOver("החלפת עבודה? איבדת את היציבות הכלכלית!");
+            gameOver("החלפת עבודה! איבדת את היציבות הכלכלית שלך.");
         });
         
         document.getElementById('no-btn').addEventListener('click', function() {
@@ -1313,7 +1597,7 @@ player.y = ground.y - player.height;
         });
         
         document.getElementById('followup-yes-btn').addEventListener('click', function() {
-            gameOver("החלפת עבודה? איבדת את היציבות הכלכלית!");
+            gameOver("החלפת עבודה! איבדת את היציבות הכלכלית שלך.");
         });
         
         document.getElementById('followup-no-btn').addEventListener('click', function() {
@@ -1323,6 +1607,11 @@ player.y = ground.y - player.height;
             } else {
                 document.getElementById('job-offer-followup').style.display = 'none';
                 gamePaused = false;
+                
+                // Reward player for resisting temptation
+                score += 1000;
+                showPopupMessage("קיבלת 1,000 ש\"ח בונוס על ההתמדה!", 2000);
+                updateDisplay();
             }
         });
         
@@ -1335,45 +1624,47 @@ player.y = ground.y - player.height;
             resetGame();
         });
         
-        // הוסף את הקוד הזה לתחילת פונקציית startGame
-function startGame() {
-    // התאם את הקנבס לגודל המסך ברספונסיביות
-    const handleResize = function() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        ground.y = canvas.height * 0.8;
-        ground.width = canvas.width;
-        ground.height = canvas.height * 0.2;
-        player.y = ground.y - player.height;
+        // Helper function to schedule obstacles
+        function scheduleObstacle(delayMs) {
+            pendingObstacles.push({
+                time: Date.now() + delayMs
+            });
+        }
         
-        // התאם את גודל שחקן לגודל המסך
-        let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
-        scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // הגבל בין 0.5 ל-1.5
+        // Mobile-specific optimizations
+        function optimizeForMobile() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Reduce visual effects for better performance
+                const style = document.createElement('style');
+                style.textContent = `
+                    @media (max-width: 768px) {
+                        #game-canvas {
+                            image-rendering: optimizeSpeed;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
         
-        player.width = 50 * scaleFactor;
-        player.height = 80 * scaleFactor;
+        // Load game assets
+        function preloadAssets() {
+            // No external assets needed in this version
+            return Promise.resolve();
+        }
         
-        // עדכן גם את גודל הקפיצה בהתאם
-        player.jumpPower = 15 * scaleFactor;
-    };
-    
-    // הפעל את ההתאמה בתחילת המשחק
-    handleResize();
-    
-    // הוסף מאזין לשינוי גודל
-    window.removeEventListener('resize', handleResize); // הסר אם קיים
-    window.addEventListener('resize', handleResize);
-    
-    // אתחל את המשחק
-    resetGame();
-    
-    // Game loop
-    setInterval(updateGame, frameTime);
-}
-        
-        // Start the game when the page loads
+        // Initialize the game when the page loads
         window.onload = function() {
-            startGame();
+            optimizeForMobile();
+            preloadAssets().then(() => {
+                startGame();
+            }).catch(error => {
+                console.error('Failed to load game assets:', error);
+                // Start anyway
+                startGame();
+            });
         };
     </script>
 </body>
