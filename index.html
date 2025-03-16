@@ -8,8 +8,6 @@
 </head>
 <body>
     <script>
-    // יצירת משחק בסיסי עם קפיצה ומכשולים מתוקנים באמצעות Phaser.js
-
     const config = {
         type: Phaser.AUTO,
         width: 800,
@@ -33,16 +31,16 @@
     let ground;
     let score = 0;
     let scoreText;
+    let month = 3;
+    let year = 2025;
     let startTime;
     let lastUpdateTime = 0;
     const updateInterval = 300000; // 5 דקות = 300,000 מילי-שניות
-    let obstacles;
     let jumpKey;
 
     function preload() {
+        this.load.spritesheet('player', 'https://via.placeholder.com/40x40', { frameWidth: 40, frameHeight: 40 });
         this.load.image('ground', 'https://via.placeholder.com/800x50');
-        this.load.image('player', 'https://via.placeholder.com/40x40');
-        this.load.image('obstacle', 'https://via.placeholder.com/30x30');
     }
 
     function create() {
@@ -55,25 +53,33 @@
         player.setCollideWorldBounds(true);
         this.physics.add.collider(player, ground);
 
-        // הצגת ניקוד
-        scoreText = this.add.text(16, 16, '₪0', { fontSize: '32px', fill: '#fff' });
+        // יצירת אנימציה לדמות (הדמיה של ריצה)
+        this.anims.create({
+            key: 'run',
+            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        player.play('run');
+
+        // הצגת חיסכון וזמן
+        scoreText = this.add.text(16, 16, '₪0 - 03/2025', { fontSize: '32px', fill: '#fff' });
         startTime = this.time.now;
 
-        // יצירת קבוצת מכשולים
-        obstacles = this.physics.add.group();
-        this.time.addEvent({ delay: 3000, callback: spawnObstacle, callbackScope: this, loop: true });
-        this.physics.add.collider(player, obstacles, hitObstacle, null, this);
-
-        // הגדרת לחיצת מקש רווח או מסך לקפיצה
+        // הגדרת לחיצת מקש רווח לקפיצה
         jumpKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.input.on('pointerdown', jump, this);
     }
 
     function update() {
         let currentTime = this.time.now;
         if (currentTime - lastUpdateTime >= updateInterval) {
             score += 5000;
-            scoreText.setText('₪' + score);
+            month++;
+            if (month > 12) {
+                month = 1;
+                year++;
+            }
+            scoreText.setText('₪' + score + ' - ' + (month < 10 ? '0' : '') + month + '/' + year);
             lastUpdateTime = currentTime;
         }
 
@@ -87,18 +93,6 @@
         if (player.body.touching.down) {
             player.setVelocityY(-250);
         }
-    }
-
-    function spawnObstacle() {
-        let obstacle = obstacles.create(800, 350, 'obstacle');
-        obstacle.setVelocityX(-200);
-        obstacle.setCollideWorldBounds(false);
-        obstacle.setGravityY(0); // מניעת נפילה של מכשולים אחד על השני
-        obstacle.setImmovable(true); // קובע שהמכשול קשיח ולא נופל
-    }
-
-    function hitObstacle() {
-        this.scene.restart();
     }
     </script>
 </body>
