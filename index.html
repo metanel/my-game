@@ -39,7 +39,7 @@
     let jumpKey;
 
     function preload() {
-        this.load.spritesheet('player', 'https://via.placeholder.com/40x40', { frameWidth: 40, frameHeight: 40 });
+        this.load.spritesheet('player', 'https://via.placeholder.com/80x40', { frameWidth: 40, frameHeight: 40 });
         this.load.image('ground', 'https://via.placeholder.com/800x50');
     }
 
@@ -57,7 +57,7 @@
         this.anims.create({
             key: 'run',
             frames: this.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
-            frameRate: 10,
+            frameRate: 5,
             repeat: -1
         });
         player.play('run');
@@ -84,13 +84,7 @@
         }
 
         // קפיצה עם מקש רווח
-        if (Phaser.Input.Keyboard.JustDown(jumpKey)) {
-            jump();
-        }
-    }
-
-    function jump() {
-        if (player.body.touching.down) {
+        if (Phaser.Input.Keyboard.JustDown(jumpKey) && player.body.touching.down) {
             player.setVelocityY(-250);
         }
     }
