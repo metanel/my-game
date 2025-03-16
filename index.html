@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>משחק החיסכון</title>
+    <title>משחק החיסכון - לימוד למשמעת פיננסית</title>
     <style>
         body {
             margin: 0;
@@ -49,7 +49,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
             text-align: center;
             z-index: 100;
@@ -95,6 +95,52 @@
         }
         .dialog-box button.no-btn:hover {
             background-color: #d32f2f;
+        }
+        #obstacle-dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 3px solid #ff5722;
+            border-radius: 10px;
+            padding: 15px 25px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            width: 300px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+        #obstacle-dialog h3 {
+            margin-top: 0;
+            color: #d32f2f;
+        }
+        #obstacle-dialog p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        #obstacle-dialog button {
+            margin: 5px;
+            padding: 8px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #ignore-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #accept-btn {
+            background-color: #ff9800;
+            color: white;
+        }
+        #ignore-btn:hover {
+            background-color: #388E3C;
+        }
+        #accept-btn:hover {
+            background-color: #F57C00;
         }
         #game-over {
             position: absolute;
@@ -225,6 +271,24 @@
             width: 0%;
             transition: width 0.1s linear;
         }
+        .status-effect {
+            position: absolute;
+            bottom: 50px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        #status-negative {
+            background-color: rgba(244, 67, 54, 0.8);
+        }
+        #status-weight {
+            background-color: rgba(255, 152, 0, 0.8);
+            left: 150px;
+        }
         @media (max-width: 600px) {
             .game-display {
                 font-size: 14px;
@@ -250,6 +314,13 @@
                 width: 150px;
                 height: 12px;
             }
+            #obstacle-dialog {
+                width: 250px;
+                padding: 10px 15px;
+            }
+            #obstacle-dialog p {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -260,25 +331,36 @@
         <div id="date-display" class="game-display">מרץ 2025</div>
         <div id="monthly-stats">
             <div>הוצאות: <span id="expenses">0</span> ש"ח</div>
-            <div>הכנסות: <span id="income">0</span> ש"ח</div>
+            <div>הכנסות: <span id="income">5,000</span> ש"ח</div>
         </div>
         <div id="achievements"></div>
         <div id="power-meter" class="power-meter">
             <div id="power-meter-fill" class="power-meter-fill"></div>
         </div>
         <div id="popup-message" class="popup-message"></div>
+        <div id="status-negative" class="status-effect">השפעה מנטלית: חלש</div>
+        <div id="status-weight" class="status-effect">מצב גופני: כבד</div>
+        
+        <!-- דיאלוג המכשול החדש -->
+        <div id="obstacle-dialog">
+            <h3 id="obstacle-title">פיתוי!</h3>
+            <p id="obstacle-text">האם תיכנע לפיתוי?</p>
+            <button id="ignore-btn">התעלם</button>
+            <button id="accept-btn">קבל</button>
+        </div>
         
         <div id="tutorial-message">
             <h3>ברוכים הבאים למשחק החיסכון!</h3>
-            <p>המטרה שלך היא לצבור 100,000 ש"ח על ידי התחמקות ממכשולים ואיסוף חיזוקים.</p>
+            <p>המטרה שלך היא לצבור 100,000 ש"ח על ידי התמדה בעבודה קבועה והתחמקות ממכשולים.</p>
             <p>לחץ על המסך או על מקש הרווח כדי לקפוץ מעל מכשולים.</p>
-            <p>אתה מרוויח 5,000 ש"ח בכל חודש, אבל היזהר מפיתויים להוציא כסף!</p>
+            <p>אתה מרוויח 5,000 ש"ח בכל חודש מהעבודה היציבה שלך, אבל היזהר מפיתויים!</p>
+            <p>זכור - חיסכון הוא מרתון, לא ספרינט. זה לוקח זמן ומשמעת.</p>
             <button id="start-btn">התחל לשחק</button>
         </div>
         
         <div id="job-offer" class="dialog-box">
             <h3>הצעת עבודה חדשה!</h3>
-            <p>האם אתה רוצה להחליף את העבודה שלך בעבודה אחרת מאוד מפתה?</p>
+            <p>האם אתה רוצה להחליף את העבודה היציבה שלך בעבודה שנשמעת מפתה יותר?</p>
             <button id="yes-btn">כן</button>
             <button id="no-btn" class="no-btn">לא</button>
         </div>
@@ -299,22 +381,23 @@
                 <p>אספת <span id="powerups-collected">0</span> חיזוקים</p>
                 <p>התחמקת מ-<span id="obstacles-avoided">0</span> מכשולים</p>
             </div>
+            <p class="lesson">למדת שחיסכון דורש משמעת, סבלנות והתמדה לאורך זמן.</p>
             <button id="restart-btn">התחל מחדש</button>
         </div>
         
         <div id="win-screen">
             <h2>ניצחון!</h2>
             <p>הצלחת להגיע ליעד של 100,000 ש"ח!</p>
-            <p>כל הכבוד על ההתמדה וקבלת ההחלטות הנכונות!</p>
+            <p>כל הכבוד על ההתמדה, המשמעת העצמית וקבלת ההחלטות הנכונות!</p>
             <div id="win-stats">
                 <p>השלמת את המשחק ב-<span id="win-months">0</span> חודשים</p>
                 <p>אספת <span id="win-powerups">0</span> חיזוקים</p>
                 <p>התחמקת מ-<span id="win-obstacles">0</span> מכשולים</p>
             </div>
+            <p class="lesson">זכור: חיסכון הוא מסע ארוך שדורש התמדה - בדיוק כמו במשחק הזה!</p>
             <button id="play-again-btn">שחק שוב</button>
         </div>
     </div>
-
     <script>
         // Canvas and context setup
         const canvas = document.getElementById('game-canvas');
@@ -337,7 +420,9 @@
             powerupsCollected: 0,
             obstaclesAvoided: 0,
             expenses: 0,
-            income: 5000  // Starting monthly income
+            income: 5000,  // Starting monthly income
+            mentalHealth: 100, // מצב מנטלי שמשפיע על יכולת הקפיצה
+            physicalHealth: 100 // מצב גופני שמשפיע על יכולת הקפיצה
         };
         
         // Achievements
@@ -345,7 +430,8 @@
             firstMonth: { earned: false, text: "הישרדות חודש ראשון" },
             saveHero: { earned: false, text: "חסכת 50,000 ש\"ח" },
             powerCollector: { earned: false, text: "אספת 10 חיזוקים" },
-            obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" }
+            obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" },
+            mentalStrength: { earned: false, text: "שמרת על בריאות מנטלית חזקה" }
         };
         
         const totalMonths = 20; // From March 2025 to November 2026
@@ -356,8 +442,8 @@
             "יוני 2026", "יולי 2026", "אוגוסט 2026", "ספטמבר 2026", "אוקטובר 2026", "נובמבר 2026"
         ];
         
-        // Month duration is now more reasonable - 30 seconds per month
-        const monthDuration = 30; // 30 seconds
+        // Month duration is increased to make the game longer as requested - 45 seconds per month
+        const monthDuration = 45; // 45 seconds per month
         const framesPerSecond = 60;
         const frameTime = 1000 / framesPerSecond;
         const framesPerMonth = monthDuration * framesPerSecond;
@@ -375,7 +461,8 @@
             width: 50,
             height: 80,
             jumping: false,
-            jumpPower: 15,
+            jumpPower: 15, // Base jump power
+            currentJumpPower: 15, // Will be affected by mental and physical health
             jumpVelocity: 0,
             gravity: 0.5,
             speed: 5,
@@ -383,7 +470,9 @@
             powerUpTime: 0,
             powerUpHits: 0,
             powerUpType: '',
-            companion: false
+            companion: false,
+            weight: 1, // Will increase with food obstacles, affecting jump
+            mentalStrength: 1 // Will decrease with negative comments, affecting jump
         };
         
         // Ground variables
@@ -397,6 +486,11 @@
         let obstacles = [];
         let powerups = [];
         let pendingObstacles = [];  // For delayed creation
+        
+        // Obstacle dialog variables
+        let currentObstacle = null;
+        let lastObstacleTime = 0;
+        const minObstacleInterval = 5000; // Minimum time between obstacle dialogs (5 seconds)
         
         // Job offer variables
         let jobOfferStage = 0;
@@ -423,6 +517,48 @@
             }, duration);
         }
         
+        // Update player's jump power based on mental and physical health
+        function updatePlayerCondition() {
+            // Calculate weight effect (physical health)
+            let weightEffect = 1;
+            if (stats.physicalHealth < 80) {
+                weightEffect = 0.9;
+                document.getElementById('status-weight').style.display = 'block';
+                document.getElementById('status-weight').textContent = "מצב גופני: כבד";
+            } else if (stats.physicalHealth < 60) {
+                weightEffect = 0.7;
+                document.getElementById('status-weight').style.display = 'block';
+                document.getElementById('status-weight').textContent = "מצב גופני: כבד מאוד";
+            } else if (stats.physicalHealth < 40) {
+                weightEffect = 0.5;
+                document.getElementById('status-weight').style.display = 'block';
+                document.getElementById('status-weight').textContent = "מצב גופני: עודף משקל חמור";
+            } else {
+                document.getElementById('status-weight').style.display = 'none';
+            }
+            
+            // Calculate mental effect
+            let mentalEffect = 1;
+            if (stats.mentalHealth < 80) {
+                mentalEffect = 0.9;
+                document.getElementById('status-negative').style.display = 'block';
+                document.getElementById('status-negative').textContent = "השפעה מנטלית: חלש";
+            } else if (stats.mentalHealth < 60) {
+                mentalEffect = 0.7;
+                document.getElementById('status-negative').style.display = 'block';
+                document.getElementById('status-negative').textContent = "השפעה מנטלית: חלש מאוד";
+            } else if (stats.mentalHealth < 40) {
+                mentalEffect = 0.5;
+                document.getElementById('status-negative').style.display = 'block';
+                document.getElementById('status-negative').textContent = "השפעה מנטלית: דיכאון";
+            } else {
+                document.getElementById('status-negative').style.display = 'none';
+            }
+            
+            // Update jump power
+            player.currentJumpPower = player.jumpPower * weightEffect * mentalEffect;
+        }
+        
         // Create obstacle
         function createObstacle() {
             const types = ['person', 'ad', 'food'];
@@ -433,10 +569,12 @@
             if (type === 'person') {
                 const negativeComments = [
                     "אתה לא טוב מספיק",
-                    "אתה לא יכול לחסוך",
+                    "אתה לא תצליח לחסוך",
                     "זה גדול עליך",
-                    "למה שתצליח?",
-                    "אין לך מספיק משמעת"
+                    "אתה לא מספיק חכם",
+                    "חיסכון זה לעשירים בלבד",
+                    "אף פעם לא תגיע ל-100,000",
+                    "למה לחסוך? תהנה מהחיים עכשיו"
                 ];
                 
                 obstacle = {
@@ -445,18 +583,20 @@
                     width: 50,
                     height: 80,
                     type: type,
-                    speed: 5 + (currentMonth * 0.1), // Increases with time
+                    speed: 4 + (currentMonth * 0.1), // Slower speed for longer game
                     text: negativeComments[getRandomInt(0, negativeComments.length - 1)],
-                    value: getRandomInt(500, 1000) // Cost if hit
+                    value: getRandomInt(500, 1000), // Cost if hit
+                    mentalEffect: getRandomInt(5, 15) // How much it will reduce mental health
                 };
             } else if (type === 'ad') {
                 const adTexts = [
-                    "תבזבז!",
-                    "תקנה עכשיו!",
-                    "אתה חייב בגדים חדשים!",
-                    "חופשה מושלמת ב-70% הנחה!",
+                    "מבצע מטורף! קנה עכשיו!",
+                    "רק היום: הנחה של 70%!",
+                    "חליפה חדשה תעזור לך למצוא עבודה",
+                    "חופשה מושלמת ב-50% הנחה!",
                     "קורס שיעזור לך להרוויח יותר!",
-                    "רק קפה קטן, זה לא יזיק לחיסכון!"
+                    "רק קפה קטן, זה לא יפגע בחיסכון!",
+                    "מכונית חדשה - תשלומים נוחים!"
                 ];
                 
                 obstacle = {
@@ -465,17 +605,18 @@
                     width: 60,
                     height: 70,
                     type: type,
-                    speed: 6 + (currentMonth * 0.15),
+                    speed: 5 + (currentMonth * 0.15),
                     text: adTexts[getRandomInt(0, adTexts.length - 1)],
-                    value: getRandomInt(1000, 2000)
+                    value: getRandomInt(1000, 3000)
                 };
             } else if (type === 'food') {
                 const foodTypes = [
-                    "אוכל יקר במסעדה",
                     "ממתקים וחטיפים",
-                    "משקאות מוגזים",
-                    "קניות במכולת יקרה",
-                    "משלוחים במקום לבשל"
+                    "אוכל מהיר שמן",
+                    "משקאות מתוקים",
+                    "ארוחות יקרות במסעדות",
+                    "הזמנת משלוחים במקום לבשל",
+                    "קניות במכולת יקרה"
                 ];
                 
                 obstacle = {
@@ -484,9 +625,10 @@
                     width: 50,
                     height: 60,
                     type: type,
-                    speed: 4 + (currentMonth * 0.1),
+                    speed: 3 + (currentMonth * 0.1), // Slower speed for longer game
                     text: foodTypes[getRandomInt(0, foodTypes.length - 1)],
-                    value: getRandomInt(300, 800)
+                    value: getRandomInt(300, 1200),
+                    weightEffect: getRandomInt(5, 15) // How much it will reduce physical health
                 };
             }
             
@@ -528,9 +670,11 @@
                 width: width,
                 height: height,
                 type: type,
-                speed: 5,
+                speed: 4, // Slower speed for longer game
                 text: text,
-                value: value
+                value: value,
+                healthEffect: type === 'healthyFood' || type === 'exercise' ? 10 : 0, // Improve physical health
+                mentalEffect: type === 'earlySleep' || type === 'earlyRise' ? 10 : 0 // Improve mental health
             };
             
             powerups.push(powerup);
@@ -543,7 +687,7 @@
                 y: ground.y - 70,
                 width: 40,
                 height: 70,
-                speed: 5,
+                speed: 4,
                 type: 'companion',
                 text: "אני ארוץ איתך ביחד!"
             };
@@ -565,6 +709,16 @@
                     break;
                 case 'earlyRise':
                 case 'earlySleep':
+                    player.powerUp = true;
+                    player.powerUpTime = maxPowerUpTime;
+                    player.powerUpType = powerup.type;
+                    document.getElementById('power-meter').style.display = 'block';
+                    showPopupMessage(`חיזוק פעיל: ${powerup.text}!`, 1500);
+                    
+                    // Improve mental health
+                    stats.mentalHealth = Math.min(100, stats.mentalHealth + powerup.mentalEffect);
+                    updatePlayerCondition();
+                    break;
                 case 'healthyFood':
                 case 'exercise':
                     player.powerUp = true;
@@ -572,6 +726,10 @@
                     player.powerUpType = powerup.type;
                     document.getElementById('power-meter').style.display = 'block';
                     showPopupMessage(`חיזוק פעיל: ${powerup.text}!`, 1500);
+                    
+                    // Improve physical health
+                    stats.physicalHealth = Math.min(100, stats.physicalHealth + powerup.healthEffect);
+                    updatePlayerCondition();
                     break;
                 case 'companion':
                     player.companion = true;
@@ -580,6 +738,11 @@
                     player.powerUpType = 'companion';
                     document.getElementById('power-meter').style.display = 'block';
                     showPopupMessage("חבר לריצה מצטרף אליך!", 2000);
+                    
+                    // Companion helps with both mental and physical health
+                    stats.mentalHealth = Math.min(100, stats.mentalHealth + 15);
+                    stats.physicalHealth = Math.min(100, stats.physicalHealth + 15);
+                    updatePlayerCondition();
                     break;
             }
             
@@ -588,6 +751,100 @@
                 achievements.powerCollector.earned = true;
                 addAchievement(achievements.powerCollector.text);
             }
+        }
+        
+        // Show obstacle dialog
+        function showObstacleDialog(obstacle) {
+            // Pause the game
+            gamePaused = true;
+            currentObstacle = obstacle;
+            
+            // Set dialog content
+            document.getElementById('obstacle-title').textContent = getObstacleTitle(obstacle.type);
+            document.getElementById('obstacle-text').textContent = obstacle.text;
+            
+            // Show dialog
+            document.getElementById('obstacle-dialog').style.display = 'block';
+        }
+        
+        // Get appropriate title for obstacle type
+        function getObstacleTitle(type) {
+            switch(type) {
+                case 'person':
+                    return "מחשבה שלילית!";
+                case 'ad':
+                    return "פרסומת מפתה!";
+                case 'food':
+                    return "פיתוי אוכל!";
+                default:
+                    return "מכשול!";
+            }
+        }
+        
+        // Handle accepting obstacle
+        function acceptObstacle() {
+            if (!currentObstacle) return;
+            
+            // Apply the negative effects
+            score -= currentObstacle.value;
+            stats.expenses += currentObstacle.value;
+            
+            // Apply specific effects based on obstacle type
+            if (currentObstacle.type === 'person') {
+                stats.mentalHealth -= currentObstacle.mentalEffect;
+                showPopupMessage(`המנטליות שלך נחלשה! -${currentObstacle.mentalEffect} נקודות מנטליות`, 2000);
+            } else if (currentObstacle.type === 'food') {
+                stats.physicalHealth -= currentObstacle.weightEffect;
+                showPopupMessage(`המשקל שלך עלה! -${currentObstacle.weightEffect} נקודות בריאות`, 2000);
+            } else {
+                showPopupMessage(`הוצאת ${currentObstacle.value} ש"ח!`, 1500);
+            }
+            
+            // Update player condition
+            updatePlayerCondition();
+            updateDisplay();
+            
+            // Reset and continue game
+            hideObstacleDialog();
+            
+            // Check if player is now bankrupt
+            if (score < 0) {
+                gameOver(`נגמר הכסף! הוצאת יותר מדי על ${currentObstacle.text}`);
+                return;
+            }
+            
+            // Check if mental or physical health is too low
+            if (stats.mentalHealth <= 20) {
+                gameOver("המוטיבציה שלך נשברה לגמרי. אין לך כוח להמשיך.");
+                return;
+            }
+            
+            if (stats.physicalHealth <= 20) {
+                gameOver("הבריאות הפיזית שלך נפגעה מאוד. קשה לך להמשיך.");
+                return;
+            }
+        }
+        
+        // Handle ignoring obstacle
+        function ignoreObstacle() {
+            if (!currentObstacle) return;
+            
+            // Give a small mental boost for resisting
+            stats.mentalHealth = Math.min(100, stats.mentalHealth + 2);
+            updatePlayerCondition();
+            
+            // Show message
+            showPopupMessage("התגברת על הפיתוי!", 1500);
+            
+            // Reset and continue game
+            hideObstacleDialog();
+        }
+        
+        // Hide obstacle dialog and continue game
+        function hideObstacleDialog() {
+            document.getElementById('obstacle-dialog').style.display = 'none';
+            currentObstacle = null;
+            gamePaused = false;
         }
         
         // Collision detection
@@ -600,43 +857,19 @@
         
         // Handle obstacle hit
         function hitObstacle(obstacle) {
-            if (player.powerUp) {
-                // Player has power-up, can survive hits
-                player.powerUpHits++;
-                
-                if (player.powerUpType === 'companion' || player.powerUpHits < 3) {
-                    // With companion, avoid expense completely
-                    if (player.powerUpType === 'companion') {
-                        showPopupMessage("החבר שלך עזר לך להימנע מהוצאה!", 1500);
-                        stats.obstaclesAvoided++;
-                    } else {
-                        // Still some cost but reduced
-                        const reducedValue = Math.floor(obstacle.value * 0.3);
-                        score -= reducedValue;
-                        stats.expenses += reducedValue;
-                        showPopupMessage(`הוצאת ${reducedValue} ש"ח - פחות בזכות החיזוק!`, 1500);
-                    }
-                    updateDisplay();
-                    return true; // Survived
-                }
+            // See if enough time has passed since last obstacle dialog
+            const now = Date.now();
+            if (now - lastObstacleTime < minObstacleInterval) {
+                // Too soon for another obstacle dialog, just remove the obstacle
+                return true;
             }
             
-            // No powerup or too many hits - take full damage
-            score -= obstacle.value;
-            stats.expenses += obstacle.value;
+            // Show obstacle dialog
+            showObstacleDialog(obstacle);
+            lastObstacleTime = now;
             
-            showPopupMessage(`הוצאת ${obstacle.value} ש"ח!`, 1500);
-            updateDisplay();
-            
-            // Check if player is now bankrupt
-            if (score < 0) {
-                gameOver(`נגמר הכסף! המכשול האחרון: ${obstacle.text}`);
-                return false;
-            }
-            
-            return true; // Survived but took damage
+            return true; // Obstacle is handled (will be removed in the main loop)
         }
-        
         // Update game state
         function updateGame() {
             if (!gameRunning || gamePaused) return;
@@ -651,6 +884,11 @@
                 
                 // Add monthly income to score
                 score += stats.income;
+                
+                // Slightly recover mental and physical health each month
+                stats.mentalHealth = Math.min(100, stats.mentalHealth + 2);
+                stats.physicalHealth = Math.min(100, stats.physicalHealth + 2);
+                updatePlayerCondition();
                 
                 // Check win condition
                 if (score >= 100000) {
@@ -672,14 +910,14 @@
                     // Schedule powerups throughout the month
                     setTimeout(() => {
                         createCustomPowerup(type);
-                    }, getRandomInt(2, monthDuration * 0.8) * 1000);
+                    }, getRandomInt(5, monthDuration * 0.7) * 1000);
                 });
                 
                 // Every 2 months, create a companion powerup
                 if (currentMonth % 2 === 0) {
                     setTimeout(() => {
                         createCompanion();
-                    }, getRandomInt(5, monthDuration * 0.8) * 1000);
+                    }, getRandomInt(10, monthDuration * 0.6) * 1000);
                 }
                 
                 // First month achievement
@@ -692,6 +930,12 @@
                 if (score >= 50000 && !achievements.saveHero.earned) {
                     achievements.saveHero.earned = true;
                     addAchievement(achievements.saveHero.text);
+                }
+                
+                // Check mental strength achievement
+                if (stats.mentalHealth >= 90 && currentMonth >= 5 && !achievements.mentalStrength.earned) {
+                    achievements.mentalStrength.earned = true;
+                    addAchievement(achievements.mentalStrength.text);
                 }
             }
             
@@ -741,6 +985,10 @@
                     obstacle.passed = true;
                     stats.obstaclesAvoided++;
                     
+                    // Small mental boost for avoiding obstacles
+                    stats.mentalHealth = Math.min(100, stats.mentalHealth + 1);
+                    updatePlayerCondition();
+                    
                     // Check obstacle ninja achievement
                     if (stats.obstaclesAvoided >= 20 && !achievements.obstacleNinja.earned) {
                         achievements.obstacleNinja.earned = true;
@@ -771,13 +1019,14 @@
                     powerups.splice(i, 1);
                 }
             }
-            // Maybe create a new obstacle (0.5% chance per frame - adjusted for better gameplay)
-            if (Math.random() < 0.005) {
+            
+            // Maybe create a new obstacle (0.3% chance per frame - slower for longer game)
+            if (Math.random() < 0.003) {
                 // Ensure there's enough distance from the last obstacle
                 let canCreateObstacle = true;
                 
                 for (let i = 0; i < obstacles.length; i++) {
-                    if (obstacles[i].x > canvas.width - 250) {
+                    if (obstacles[i].x > canvas.width - 350) { // More space between obstacles
                         canCreateObstacle = false;
                         break;
                     }
@@ -788,13 +1037,13 @@
                 }
             }
             
-            // Maybe create a new powerup (0.2% chance per frame)
-            if (Math.random() < 0.002) {
+            // Maybe create a new powerup (0.1% chance per frame - fewer powerups)
+            if (Math.random() < 0.001) {
                 // Make sure powerups are spaced out
                 let canCreatePowerup = true;
                 
                 for (let i = 0; i < powerups.length; i++) {
-                    if (powerups[i].x > canvas.width - 300) {
+                    if (powerups[i].x > canvas.width - 400) { // More space between powerups
                         canCreatePowerup = false;
                         break;
                     }
@@ -835,6 +1084,8 @@
             let width = 40;
             let height = 40;
             let value = 1000;
+            let healthEffect = 0;
+            let mentalEffect = 0;
             
             switch(type) {
                 case 'money':
@@ -843,15 +1094,19 @@
                     break;
                 case 'earlyRise':
                     text = "קימה מוקדם";
+                    mentalEffect = 10;
                     break;
                 case 'earlySleep':
                     text = "שינה מוקדמת";
+                    mentalEffect = 15;
                     break;
                 case 'healthyFood':
                     text = "אוכל בריא";
+                    healthEffect = 15;
                     break;
                 case 'exercise':
                     text = "אימון יומי";
+                    healthEffect = 20;
                     break;
             }
             
@@ -861,9 +1116,11 @@
                 width: width,
                 height: height,
                 type: type,
-                speed: 5,
+                speed: 4,
                 text: text,
-                value: value
+                value: value,
+                healthEffect: healthEffect,
+                mentalEffect: mentalEffect
             };
             
             powerups.push(powerup);
@@ -892,27 +1149,85 @@
             ctx.fillStyle = groundGradient;
             ctx.fillRect(0, ground.y, ground.width, ground.height);
             
+            // Draw "stable job" text on the ground
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "bold 24px Arial";
+            ctx.textAlign = "center";
+            const text = "עבודה אחת קבועה ויציבה";
+            
+            // Create pattern with the text repeating across the ground
+            const textWidth = ctx.measureText(text).width;
+            const repetitions = Math.ceil(canvas.width / (textWidth + 100));
+            
+            for (let i = 0; i < repetitions; i++) {
+                ctx.fillText(text, (textWidth + 100) * i + textWidth/2 + 50, ground.y + 40);
+            }
+            
+            ctx.textAlign = "start";
+            
             // Draw grass
             ctx.fillStyle = "#43A047";
             ctx.fillRect(0, ground.y, ground.width, 10);
             
-            // Draw player
+            // Draw player - adjusting size based on physical health
+            const healthFactor = stats.physicalHealth / 100;
+            const widthAdjustment = 1 + (1 - healthFactor) * 0.5; // Up to 50% wider
+            
+            // Calculate adjusted dimensions
+            const adjustedWidth = player.width * widthAdjustment;
+            const playerCenterX = player.x + player.width/2;
+            const adjustedX = playerCenterX - adjustedWidth/2;
+            
             ctx.fillStyle = "#000000";
+            
             // Head
             ctx.beginPath();
-            ctx.arc(player.x + player.width/2, player.y + player.width/2, player.width/2, 0, Math.PI * 2);
+            ctx.arc(playerCenterX, player.y + player.width/2, player.width/2 * widthAdjustment, 0, Math.PI * 2);
             ctx.fill();
             
             // Body
-            ctx.fillRect(player.x + player.width/4, player.y + player.width, player.width/2, player.height - player.width);
+            ctx.fillRect(adjustedX + adjustedWidth/4, player.y + player.width, adjustedWidth/2, player.height - player.width);
             
             // Arms
-            ctx.fillRect(player.x - 5, player.y + player.width + 5, player.width/4, player.height/3);
-            ctx.fillRect(player.x + player.width - player.width/4 + 5, player.y + player.width + 5, player.width/4, player.height/3);
+            ctx.fillRect(adjustedX - 5, player.y + player.width + 5, adjustedWidth/4, player.height/3);
+            ctx.fillRect(adjustedX + adjustedWidth - adjustedWidth/4 + 5, player.y + player.width + 5, adjustedWidth/4, player.height/3);
             
             // Legs
-            ctx.fillRect(player.x + player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
-            ctx.fillRect(player.x + player.width - player.width/5 - player.width/4, player.y + player.height - player.height/3, player.width/5, player.height/3);
+            ctx.fillRect(adjustedX + adjustedWidth/4, player.y + player.height - player.height/3, adjustedWidth/5, player.height/3);
+            ctx.fillRect(adjustedX + adjustedWidth - adjustedWidth/5 - adjustedWidth/4, player.y + player.height - player.height/3, adjustedWidth/5, player.height/3);
+            
+            // Draw mental state indicator - facial expression based on mental health
+            if (stats.mentalHealth < 50) {
+                // Sad face
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.lineWidth = 2;
+                
+                // Mouth (frown)
+                ctx.beginPath();
+                ctx.arc(playerCenterX, player.y + player.width/2 + 10, player.width/4, 0.1 * Math.PI, 0.9 * Math.PI, true);
+                ctx.stroke();
+                
+                // Eyes (sad)
+                ctx.beginPath();
+                ctx.arc(playerCenterX - player.width/5, player.y + player.width/2 - 5, 3, 0, Math.PI * 2);
+                ctx.arc(playerCenterX + player.width/5, player.y + player.width/2 - 5, 3, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // Happy face
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.lineWidth = 2;
+                
+                // Mouth (smile)
+                ctx.beginPath();
+                ctx.arc(playerCenterX, player.y + player.width/2 + 5, player.width/4, 0.1 * Math.PI, 0.9 * Math.PI);
+                ctx.stroke();
+                
+                // Eyes (happy)
+                ctx.beginPath();
+                ctx.arc(playerCenterX - player.width/5, player.y + player.width/2 - 5, 3, 0, Math.PI * 2);
+                ctx.arc(playerCenterX + player.width/5, player.y + player.width/2 - 5, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
             
             // Power-up effect
             if (player.powerUp) {
@@ -941,7 +1256,7 @@
                 ctx.strokeStyle = glowColor;
                 ctx.lineWidth = 3;
                 ctx.beginPath();
-                ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width*0.8, 0, Math.PI * 2);
+                ctx.arc(playerCenterX, player.y + player.height/2, player.width*0.8, 0, Math.PI * 2);
                 ctx.stroke();
             }
             
@@ -982,7 +1297,7 @@
             obstacles.forEach(obstacle => {
                 switch(obstacle.type) {
                     case 'person':
-                        // Draw person
+                        // Draw person (negative influence)
                         ctx.fillStyle = "#3F51B5"; // Indigo
                         
                         // Head
@@ -1000,6 +1315,23 @@
                         // Legs
                         ctx.fillRect(obstacle.x + obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
                         ctx.fillRect(obstacle.x + obstacle.width - obstacle.width/5 - obstacle.width/4, obstacle.y + obstacle.height - obstacle.height/3, obstacle.width/5, obstacle.height/3);
+                        
+                        // Angry face
+                        ctx.strokeStyle = "#FFFFFF";
+                        ctx.lineWidth = 2;
+                        
+                        // Mouth (frown)
+                        ctx.beginPath();
+                        ctx.arc(obstacle.x + obstacle.width/2, obstacle.y + obstacle.width/2 + 10, obstacle.width/4, 0.1 * Math.PI, 0.9 * Math.PI, true);
+                        ctx.stroke();
+                        
+                        // Eyes (angry)
+                        ctx.beginPath();
+                        ctx.moveTo(obstacle.x + obstacle.width/3, obstacle.y + obstacle.width/2 - 8);
+                        ctx.lineTo(obstacle.x + obstacle.width/3 - 5, obstacle.y + obstacle.width/2 - 3);
+                        ctx.moveTo(obstacle.x + obstacle.width*2/3, obstacle.y + obstacle.width/2 - 8);
+                        ctx.lineTo(obstacle.x + obstacle.width*2/3 + 5, obstacle.y + obstacle.width/2 - 3);
+                        ctx.stroke();
                         break;
                         
                     case 'ad':
@@ -1045,27 +1377,28 @@
                 
                 // Draw speech bubble if there is text
                 if (obstacle.text && obstacle.type !== 'default') {
-                    const bubbleWidth = 120;
-                    const bubbleHeight = 40;
+                    const bubbleWidth = 140;
+                    const bubbleHeight = 50;
                     const bubbleX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
-                    const bubbleY = obstacle.y - bubbleHeight - 10;
+                    const bubbleY = obstacle.y - bubbleHeight - 15;
                     
                     // Draw bubble background
                     ctx.fillStyle = "#FFFFFF";
                     ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
                     ctx.strokeStyle = "#000000";
+                    ctx.lineWidth = 3;
                     ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
                     
                     // Draw text
                     ctx.fillStyle = "#000000";
-                    ctx.font = "12px Arial";
+                    ctx.font = "bold 14px Arial";
                     ctx.textAlign = "center";
                     
                     // Handle text wrapping for longer text
                     if (obstacle.text.length > 15) {
                         const words = obstacle.text.split(' ');
                         let line = '';
-                        let y = bubbleY + 15;
+                        let y = bubbleY + 20;
                         
                         for (let i = 0; i < words.length; i++) {
                             const testLine = line + words[i] + ' ';
@@ -1073,7 +1406,7 @@
                             if (i === words.length - 1 || testLine.length > 15) {
                                 ctx.fillText(line, bubbleX + bubbleWidth/2, y);
                                 line = words[i] + ' ';
-                                y += 15;
+                                y += 18;
                             } else {
                                 line = testLine;
                             }
@@ -1125,7 +1458,7 @@
                     ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2, powerup.width/2, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Dollar sign
+                    // Shekel sign
                     ctx.fillStyle = "#FFFFFF";
                     ctx.font = "20px Arial";
                     ctx.textAlign = "center";
@@ -1302,6 +1635,50 @@
             ctx.strokeStyle = "#000000";
             ctx.strokeRect(progressX, progressY, progressWidth, progressHeight);
             
+            // Health indicators
+            // Physical health bar
+            const healthBarWidth = 150;
+            const healthBarHeight = 10;
+            const healthBarX = 20;
+            const healthBarY = 100;
+            
+            // Physical health background
+            ctx.fillStyle = "#E0E0E0";
+            ctx.fillRect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+            
+            // Physical health fill
+            ctx.fillStyle = "#4CAF50";
+            ctx.fillRect(healthBarX, healthBarY, healthBarWidth * (stats.physicalHealth / 100), healthBarHeight);
+            
+            // Physical health border
+            ctx.strokeStyle = "#000000";
+            ctx.strokeRect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+            
+            // Physical health label
+            ctx.fillStyle = "#000000";
+            ctx.font = "12px Arial";
+            ctx.fillText("בריאות גופנית", healthBarX, healthBarY - 5);
+            
+            // Mental health bar
+            const mentalBarY = healthBarY + 30;
+            
+            // Mental health background
+            ctx.fillStyle = "#E0E0E0";
+            ctx.fillRect(healthBarX, mentalBarY, healthBarWidth, healthBarHeight);
+            
+            // Mental health fill
+            ctx.fillStyle = "#2196F3";
+            ctx.fillRect(healthBarX, mentalBarY, healthBarWidth * (stats.mentalHealth / 100), healthBarHeight);
+            
+            // Mental health border
+            ctx.strokeStyle = "#000000";
+            ctx.strokeRect(healthBarX, mentalBarY, healthBarWidth, healthBarHeight);
+            
+            // Mental health label
+            ctx.fillStyle = "#000000";
+            ctx.font = "12px Arial";
+            ctx.fillText("בריאות מנטלית", healthBarX, mentalBarY - 5);
+            
             // Draw game messages if any
             if (gameMessage && gameMessageTime > 0) {
                 const alpha = Math.min(1, gameMessageTime / 100);
@@ -1320,7 +1697,7 @@
             ctx.fillStyle = "#FFFFFF";
             
             // Create cloud positions based on time
-            const time = Date.now() / 10000;
+            const time = Date.now() / 20000; // Slower movement for longer game feel
             
             // Draw 3-5 clouds at different positions
             for (let i = 0; i < 5; i++) {
@@ -1332,7 +1709,6 @@
                 drawCloud(x, y, scale);
             }
         }
-        
         // Helper to draw a single cloud
         function drawCloud(x, y, scale) {
             const radiusX = 30 * scale;
@@ -1433,7 +1809,9 @@
                 powerupsCollected: 0,
                 obstaclesAvoided: 0,
                 expenses: 0,
-                income: 5000
+                income: 5000,
+                mentalHealth: 100,
+                physicalHealth: 100
             };
             
             // Reset achievements
@@ -1441,7 +1819,8 @@
                 firstMonth: { earned: false, text: "הישרדות חודש ראשון" },
                 saveHero: { earned: false, text: "חסכת 50,000 ש\"ח" },
                 powerCollector: { earned: false, text: "אספת 10 חיזוקים" },
-                obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" }
+                obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" },
+                mentalStrength: { earned: false, text: "שמרת על בריאות מנטלית חזקה" }
             };
             
             // Reset player
@@ -1451,6 +1830,7 @@
             player.powerUpTime = 0;
             player.powerUpHits = 0;
             player.companion = false;
+            player.currentJumpPower = player.jumpPower;
             
             // Adjust player size based on screen dimensions
             let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
@@ -1463,10 +1843,15 @@
             
             // Reset displays
             updateDisplay();
+            updatePlayerCondition();
             
             // Clear achievements
             document.getElementById('achievements').innerHTML = '';
             document.getElementById('achievements').style.display = 'none';
+            
+            // Hide status displays
+            document.getElementById('status-negative').style.display = 'none';
+            document.getElementById('status-weight').style.display = 'none';
             
             // Hide power meter
             document.getElementById('power-meter').style.display = 'none';
@@ -1474,15 +1859,22 @@
             // Hide all dialogs
             document.getElementById('job-offer').style.display = 'none';
             document.getElementById('job-offer-followup').style.display = 'none';
+            document.getElementById('obstacle-dialog').style.display = 'none';
             document.getElementById('game-over').style.display = 'none';
             document.getElementById('win-screen').style.display = 'none';
-            document.getElementById('tutorial-message').style.display = 'none';
+            document.getElementById('tutorial-message').style.display = 'block';
+            
+            // Reset obstacle dialog tracking
+            currentObstacle = null;
+            lastObstacleTime = 0;
         }
+        
         // Jump function
         function jump() {
             if (!player.jumping) {
                 player.jumping = true;
-                player.jumpVelocity = -player.jumpPower;
+                // Use current jump power which is affected by mental and physical health
+                player.jumpVelocity = -player.currentJumpPower;
                 
                 // Play jump sound
                 try {
@@ -1514,6 +1906,7 @@
             
             // Adjust jump power for screen size
             player.jumpPower = 15 * scaleFactor;
+            updatePlayerCondition(); // Update jump power based on health
         }
         
         // Start game
@@ -1581,6 +1974,15 @@
             }
         });
         
+        // Obstacle dialog buttons
+        document.getElementById('ignore-btn').addEventListener('click', function() {
+            ignoreObstacle();
+        });
+        
+        document.getElementById('accept-btn').addEventListener('click', function() {
+            acceptObstacle();
+        });
+        
         // Start button click
         document.getElementById('start-btn').addEventListener('click', function() {
             tutorialShown = false;
@@ -1610,6 +2012,9 @@
                 
                 // Reward player for resisting temptation
                 score += 1000;
+                // Also boost mental health
+                stats.mentalHealth = Math.min(100, stats.mentalHealth + 10);
+                updatePlayerCondition();
                 showPopupMessage("קיבלת 1,000 ש\"ח בונוס על ההתמדה!", 2000);
                 updateDisplay();
             }
