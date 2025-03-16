@@ -569,9 +569,9 @@
                 // טקסטים משכנעים עבור אנשים שליליים
                 const persuasiveTexts = [
                     // שלב ראשון - הכותרת והטקסט הראשוני יקבעו בנפרד
-                    `תראה, כולם סביבך מצליחים יותר ממך. אולי הם צודקים?`, // שלב שני
-                    `למה לעבוד כל כך קשה? הרי סטטיסטית רוב האנשים לא מצליחים.`, // שלב שלישי
-                    `מה הטעם בחיסכון? תחשוב כמה הנאות אתה מפספס בדרך.` // שלב רביעי
+                    `אתה לא בנוי גנטית כדי להצליח`, // שלב שני
+                    `אתה לא בסביבה הנכונה כדי להצליח.`, // שלב שלישי
+                    `אתה חלש מדי מנטלית, תיקח חופשה קטנה.` // שלב רביעי
                 ];
                 
                 obstacle = {
@@ -585,8 +585,8 @@
                     value: getRandomInt(500, 1000), // Cost if hit
                     mentalEffect: getRandomInt(5, 15), // How much it will reduce mental health
                     persuasiveTexts: persuasiveTexts,
-                    obstacleTitle: "מחשבה שלילית!",
-                    initialText: "אתה מרגיש שחיסכון הוא דבר קשה מדי בשבילך."
+                    obstacleTitle: "יש לי משהו להגיד לך",
+                    initialText: "החיים קצרים כדאי לך להנאות מכל רגע במקום לחסוך."
                 };
             } else if (type === 'ad') {
                 const adTexts = [
@@ -601,9 +601,9 @@
                 
                 // טקסטים משכנעים עבור פרסומות
                 const persuasiveTexts = [
-                    `זו הזדמנות שלא תחזור! אחרי הכל, כולם רוצים זאת!`,
-                    `תחשוב כמה זמן רצית את זה. הגיע הזמן לפנק את עצמך!`,
-                    `זה לא יפגע בחיסכון שלך, זו השקעה בעתיד.`
+                    `השקעה חכמה!`,
+                    `זה לא יפגע בחיסכון שלך, זו השקעה בעתיד`,
+                    `אם אתה מפספס את זה עכשיו זה לא יהיה יותר.`
                 ];
                 
                 obstacle = {
@@ -632,8 +632,8 @@
                 // טקסטים משכנעים עבור אוכל
                 const persuasiveTexts = [
                     `זה טעים כל כך! אתה ממש צריך את זה עכשיו.`,
-                    `מידי פעם מותר לאכול משהו טעים, זה לא יעשה לך כלום.`,
-                    `כולם אוכלים את זה, למה שלא תתפנק גם?`
+                    `מידי פעם צריך לאכול משהו מתוק, כדי להיות חזק יותר.`,
+                    `יאללה תאכל כבר מה יהיה?`
                 ];
                 
                 obstacle = {
@@ -647,7 +647,7 @@
                     value: getRandomInt(300, 1200),
                     weightEffect: getRandomInt(5, 15), // How much it will reduce physical health
                     persuasiveTexts: persuasiveTexts,
-                    obstacleTitle: "פיתוי טעים!",
+                    obstacleTitle: "אוכל לא בריא!",
                     initialText: "נתקלת באוכל טעים ומפתה שקשה לעמוד בפניו."
                 };
             }
@@ -802,7 +802,7 @@
                 
                 // במידה וזה השלב האחרון, שנה את הטקסט של כפתור ההתעלמות
                 if (persuasionStage === currentObstacle.persuasiveTexts.length) {
-                    document.getElementById('ignore-btn').textContent = "אני מתעלם!";
+                    document.getElementById('ignore-btn').textContent = "אני מתגבר על זה!";
                 } else {
                     document.getElementById('ignore-btn').textContent = "התעלם";
                 }
