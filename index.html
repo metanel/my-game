@@ -229,11 +229,14 @@
         let currentMonth = 0;
         const totalMonths = 20; // From March 2025 to November 2026
         const monthNames = [
-            "מרץ 2025", "אפריל 2025", "מאי 2025", "יוני 2025", "יולי 2025", 
-            "אוגוסט 2025", "ספטמבר 2025", "אוקטובר 2025", "נובמבר 2025", "דצמבר 2025",
-            "ינואר 2026", "פברואר 2026", "מרץ 2026", "אפריל 2026", "מאי 2026", 
-            "יוני 2026", "יולי 2026", "אוגוסט 2026", "ספטמבר 2026", "אוקטובר 2026", "נובמבר 2026"
-        const maxPowerUpTime = 300; // 5 seconds at 60fps
+    "מרץ 2025", "אפריל 2025", "מאי 2025", "יוני 2025", "יולי 2025", 
+    "אוגוסט 2025", "ספטמבר 2025", "אוקטובר 2025", "נובמבר 2025", "דצמבר 2025",
+    "ינואר 2026", "פברואר 2026", "מרץ 2026", "אפריל 2026", "מאי 2026", 
+    "יוני 2026", "יולי 2026", "אוגוסט 2026", "ספטמבר 2026", "אוקטובר 2026", "נובמבר 2026"
+];
+const maxPowerUpTime = 300; // 5 seconds at 60fps
+let gameMessage = '';
+let gameMessageTime = 0;
         ];
         
         // 5 minutes per month
@@ -972,7 +975,7 @@ if (obstacle.text && obstacle.type !== 'food') {
     });
     
     // Draw powerups
-    powerups.forEach(powerUp => {
+powerups.forEach(powerup => {
         switch(powerUp.type) {
             case 'morning':
                 // Draw sun icon for morning power-up
@@ -1233,15 +1236,21 @@ if (obstacle.text && obstacle.type !== 'food') {
             powerups = [];
             
             // Reset player
-            player.y = ground.y - player.height;
-            player.jumping = false;
-            player.jumpVelocity = 0;
-            player.powerUp = false;
-            player.powerUpTime = 0;
-            player.powerUpHits = 0;
-            player.companion = false;
-            player.width = 30;
-            player.height = 50;
+player.jumping = false;
+player.jumpVelocity = 0;
+player.powerUp = false;
+player.powerUpTime = 0;
+player.powerUpHits = 0;
+player.companion = false;
+
+// התאם את גודל השחקן לגודל המסך
+let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
+scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // הגבל בין 0.5 ל-1.5
+player.width = 50 * scaleFactor;
+player.height = 80 * scaleFactor;
+
+// עדכן את מיקום השחקן לאחר שינוי הגודל
+player.y = ground.y - player.height;
             
             // Reset displays
             updateDisplay();
