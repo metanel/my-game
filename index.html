@@ -188,58 +188,6 @@
             width: 80%;
             max-width: 450px;
         }
-        .speech-bubble {
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 2px solid #333;
-            border-radius: 10px;
-            padding: 8px;
-            font-size: 14px;
-            width: 120px;
-            text-align: center;
-            z-index: 5;
-            word-wrap: break-word;
-        }
-        .speech-bubble:after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 10px 5px 0;
-            border-style: solid;
-            border-color: #333 transparent transparent transparent;
-        }
-        #monthly-stats {
-            position: absolute;
-            top: 60px;
-            right: 10px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            font-size: 14px;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: none;
-        }
-        #achievements {
-            position: absolute;
-            top: 60px;
-            left: 10px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            font-size: 14px;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: none;
-        }
-        .achievement {
-            padding: 5px;
-            margin-bottom: 5px;
-            background-color: rgba(76, 175, 80, 0.2);
-            border-radius: 4px;
-        }
         .popup-message {
             position: absolute;
             bottom: 100px;
@@ -288,6 +236,28 @@
         #status-weight {
             background-color: rgba(255, 152, 0, 0.8);
             left: 150px;
+        }
+        #speed-indicator {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        #movement-instruction {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            display: none;
         }
         @media (max-width: 600px) {
             .game-display {
@@ -340,20 +310,23 @@
         <div id="popup-message" class="popup-message"></div>
         <div id="status-negative" class="status-effect">השפעה מנטלית: חלש</div>
         <div id="status-weight" class="status-effect">מצב גופני: כבד</div>
+        <div id="speed-indicator">מהירות: רגילה</div>
+        <div id="movement-instruction">לחץ על המסך לרוץ קדימה</div>
         
-        <!-- דיאלוג המכשול החדש -->
-        <div id="obstacle-dialog">
-            <h3 id="obstacle-title">פיתוי!</h3>
-            <p id="obstacle-text">האם תיכנע לפיתוי?</p>
+        <!-- דיאלוג המכשול המשופר -->
+        <div id="obstacle-dialog" class="dialog-box">
+            <h3 id="obstacle-title">נתקלת בפרס מיוחד!</h3>
+            <p id="obstacle-text">האם תרצה לקבל את ההטבה?</p>
             <button id="ignore-btn">התעלם</button>
             <button id="accept-btn">קבל</button>
         </div>
         
         <div id="tutorial-message">
             <h3>ברוכים הבאים למשחק החיסכון!</h3>
-            <p>המטרה שלך היא לצבור 100,000 ש"ח על ידי התמדה בעבודה קבועה והתחמקות ממכשולים.</p>
-            <p>לחץ על המסך או על מקש הרווח כדי לקפוץ מעל מכשולים.</p>
+            <p>המטרה שלך היא לצבור 100,000 ש"ח על ידי התמדה בעבודה קבועה.</p>
+            <p>לחץ על המסך (או החזק מקש הרווח) כדי לרוץ קדימה. אם לא תלחץ, לא תתקדם בדרך לחיסכון.</p>
             <p>אתה מרוויח 5,000 ש"ח בכל חודש מהעבודה היציבה שלך, אבל היזהר מפיתויים!</p>
+            <p>המהירות שבה אתה מתקדם מושפעת ממצב הבריאות הפיזית והמנטלית שלך.</p>
             <p>זכור - חיסכון הוא מרתון, לא ספרינט. זה לוקח זמן ומשמעת.</p>
             <button id="start-btn">התחל לשחק</button>
         </div>
@@ -379,7 +352,7 @@
             <div id="game-stats">
                 <p>שיחקת <span id="months-played">0</span> חודשים</p>
                 <p>אספת <span id="powerups-collected">0</span> חיזוקים</p>
-                <p>התחמקת מ-<span id="obstacles-avoided">0</span> מכשולים</p>
+                <p>התמודדת עם <span id="obstacles-avoided">0</span> פיתויים</p>
             </div>
             <p class="lesson">למדת שחיסכון דורש משמעת, סבלנות והתמדה לאורך זמן.</p>
             <button id="restart-btn">התחל מחדש</button>
@@ -392,7 +365,7 @@
             <div id="win-stats">
                 <p>השלמת את המשחק ב-<span id="win-months">0</span> חודשים</p>
                 <p>אספת <span id="win-powerups">0</span> חיזוקים</p>
-                <p>התחמקת מ-<span id="win-obstacles">0</span> מכשולים</p>
+                <p>עמדת בפני <span id="win-obstacles">0</span> פיתויים</p>
             </div>
             <p class="lesson">זכור: חיסכון הוא מסע ארוך שדורש התמדה - בדיוק כמו במשחק הזה!</p>
             <button id="play-again-btn">שחק שוב</button>
@@ -413,16 +386,19 @@
         let score = 0;
         let currentMonth = 0;
         let tutorialShown = true;
+        let isMoving = false; // שליטה בתנועה
+        let moveTimer = null; // לזמן תצוגת ההוראה
         
         // Game statistics
         let stats = {
             monthsPlayed: 0,
             powerupsCollected: 0,
             obstaclesAvoided: 0,
+            obstaclesFaced: 0,
             expenses: 0,
             income: 5000,  // Starting monthly income
-            mentalHealth: 100, // מצב מנטלי שמשפיע על יכולת הקפיצה
-            physicalHealth: 100 // מצב גופני שמשפיע על יכולת הקפיצה
+            mentalHealth: 100, // מצב מנטלי שמשפיע על מהירות התקדמות
+            physicalHealth: 100 // מצב גופני שמשפיע על מהירות התקדמות
         };
         
         // Achievements
@@ -430,7 +406,7 @@
             firstMonth: { earned: false, text: "הישרדות חודש ראשון" },
             saveHero: { earned: false, text: "חסכת 50,000 ש\"ח" },
             powerCollector: { earned: false, text: "אספת 10 חיזוקים" },
-            obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" },
+            resistanceMaster: { earned: false, text: "עמדת בפני 20 פיתויים" },
             mentalStrength: { earned: false, text: "שמרת על בריאות מנטלית חזקה" }
         };
         
@@ -442,8 +418,8 @@
             "יוני 2026", "יולי 2026", "אוגוסט 2026", "ספטמבר 2026", "אוקטובר 2026", "נובמבר 2026"
         ];
         
-        // Month duration is increased to make the game longer as requested - 45 seconds per month
-        const monthDuration = 45; // 45 seconds per month
+        // Month duration is increased to make the game longer - 60 seconds per month
+        const monthDuration = 60; // 60 seconds per month
         const framesPerSecond = 60;
         const frameTime = 1000 / framesPerSecond;
         const framesPerMonth = monthDuration * framesPerSecond;
@@ -460,19 +436,14 @@
             y: canvas.height * 0.7,
             width: 50,
             height: 80,
-            jumping: false,
-            jumpPower: 15, // Base jump power
-            currentJumpPower: 15, // Will be affected by mental and physical health
-            jumpVelocity: 0,
-            gravity: 0.5,
-            speed: 5,
+            baseSpeed: 5, // מהירות בסיסית
+            currentSpeed: 5, // מהירות נוכחית המושפעת ממצב השחקן
             powerUp: false,
             powerUpTime: 0,
-            powerUpHits: 0,
             powerUpType: '',
             companion: false,
-            weight: 1, // Will increase with food obstacles, affecting jump
-            mentalStrength: 1 // Will decrease with negative comments, affecting jump
+            weight: 1, // יגדל עם צריכת אוכל לא בריא, ישפיע על מהירות
+            mentalStrength: 1 // יקטן עם השפעות מנטליות שליליות, ישפיע על מהירות
         };
         
         // Ground variables
@@ -491,6 +462,8 @@
         let currentObstacle = null;
         let lastObstacleTime = 0;
         const minObstacleInterval = 5000; // Minimum time between obstacle dialogs (5 seconds)
+        let persuasionStage = 0; // משתנה חדש לשלב השכנוע הנוכחי
+        let persuasionTexts = []; // טקסטים לשכנוע ישמרו פר מכשול
         
         // Job offer variables
         let jobOfferStage = 0;
@@ -517,7 +490,7 @@
             }, duration);
         }
         
-        // Update player's jump power based on mental and physical health
+        // Update player's speed based on mental and physical health
         function updatePlayerCondition() {
             // Calculate weight effect (physical health)
             let weightEffect = 1;
@@ -555,8 +528,24 @@
                 document.getElementById('status-negative').style.display = 'none';
             }
             
-            // Update jump power
-            player.currentJumpPower = player.jumpPower * weightEffect * mentalEffect;
+            // Update player speed
+            player.currentSpeed = player.baseSpeed * weightEffect * mentalEffect;
+            
+            // עדכון מחוון מהירות
+            const speedIndicator = document.getElementById('speed-indicator');
+            if (player.currentSpeed < player.baseSpeed * 0.6) {
+                speedIndicator.textContent = 'מהירות: איטית מאוד';
+                speedIndicator.style.backgroundColor = 'rgba(244, 67, 54, 0.8)';
+            } else if (player.currentSpeed < player.baseSpeed * 0.8) {
+                speedIndicator.textContent = 'מהירות: איטית';
+                speedIndicator.style.backgroundColor = 'rgba(255, 152, 0, 0.8)';
+            } else if (player.currentSpeed < player.baseSpeed * 0.95) {
+                speedIndicator.textContent = 'מהירות: בינונית';
+                speedIndicator.style.backgroundColor = 'rgba(255, 193, 7, 0.8)';
+            } else {
+                speedIndicator.textContent = 'מהירות: רגילה';
+                speedIndicator.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+            }
         }
         
         // Create obstacle
@@ -577,16 +566,27 @@
                     "למה לחסוך? תהנה מהחיים עכשיו"
                 ];
                 
+                // טקסטים משכנעים עבור אנשים שליליים
+                const persuasiveTexts = [
+                    // שלב ראשון - הכותרת והטקסט הראשוני יקבעו בנפרד
+                    `תראה, כולם סביבך מצליחים יותר ממך. אולי הם צודקים?`, // שלב שני
+                    `למה לעבוד כל כך קשה? הרי סטטיסטית רוב האנשים לא מצליחים.`, // שלב שלישי
+                    `מה הטעם בחיסכון? תחשוב כמה הנאות אתה מפספס בדרך.` // שלב רביעי
+                ];
+                
                 obstacle = {
                     x: canvas.width,
                     y: ground.y - 80,
                     width: 50,
                     height: 80,
                     type: type,
-                    speed: 4 + (currentMonth * 0.1), // Slower speed for longer game
+                    speed: 4 + (currentMonth * 0.1),
                     text: negativeComments[getRandomInt(0, negativeComments.length - 1)],
                     value: getRandomInt(500, 1000), // Cost if hit
-                    mentalEffect: getRandomInt(5, 15) // How much it will reduce mental health
+                    mentalEffect: getRandomInt(5, 15), // How much it will reduce mental health
+                    persuasiveTexts: persuasiveTexts,
+                    obstacleTitle: "מחשבה שלילית!",
+                    initialText: "אתה מרגיש שחיסכון הוא דבר קשה מדי בשבילך."
                 };
             } else if (type === 'ad') {
                 const adTexts = [
@@ -599,6 +599,13 @@
                     "מכונית חדשה - תשלומים נוחים!"
                 ];
                 
+                // טקסטים משכנעים עבור פרסומות
+                const persuasiveTexts = [
+                    `זו הזדמנות שלא תחזור! אחרי הכל, כולם רוצים זאת!`,
+                    `תחשוב כמה זמן רצית את זה. הגיע הזמן לפנק את עצמך!`,
+                    `זה לא יפגע בחיסכון שלך, זו השקעה בעתיד.`
+                ];
+                
                 obstacle = {
                     x: canvas.width,
                     y: ground.y - 70,
@@ -607,7 +614,10 @@
                     type: type,
                     speed: 5 + (currentMonth * 0.15),
                     text: adTexts[getRandomInt(0, adTexts.length - 1)],
-                    value: getRandomInt(1000, 3000)
+                    value: getRandomInt(1000, 3000),
+                    persuasiveTexts: persuasiveTexts,
+                    obstacleTitle: "מבצע מיוחד!",
+                    initialText: "מצאת הזדמנות לרכוש משהו שתמיד רצית במחיר אטרקטיבי!"
                 };
             } else if (type === 'food') {
                 const foodTypes = [
@@ -619,16 +629,26 @@
                     "קניות במכולת יקרה"
                 ];
                 
+                // טקסטים משכנעים עבור אוכל
+                const persuasiveTexts = [
+                    `זה טעים כל כך! אתה ממש צריך את זה עכשיו.`,
+                    `מידי פעם מותר לאכול משהו טעים, זה לא יעשה לך כלום.`,
+                    `כולם אוכלים את זה, למה שלא תתפנק גם?`
+                ];
+                
                 obstacle = {
                     x: canvas.width,
                     y: ground.y - 60,
                     width: 50,
                     height: 60,
                     type: type,
-                    speed: 3 + (currentMonth * 0.1), // Slower speed for longer game
+                    speed: 3 + (currentMonth * 0.1),
                     text: foodTypes[getRandomInt(0, foodTypes.length - 1)],
                     value: getRandomInt(300, 1200),
-                    weightEffect: getRandomInt(5, 15) // How much it will reduce physical health
+                    weightEffect: getRandomInt(5, 15), // How much it will reduce physical health
+                    persuasiveTexts: persuasiveTexts,
+                    obstacleTitle: "פיתוי טעים!",
+                    initialText: "נתקלת באוכל טעים ומפתה שקשה לעמוד בפניו."
                 };
             }
             
@@ -753,31 +773,56 @@
             }
         }
         
-        // Show obstacle dialog
+        // Show obstacle dialog with persuasive text
         function showObstacleDialog(obstacle) {
             // Pause the game
             gamePaused = true;
             currentObstacle = obstacle;
+            persuasionStage = 0; // איפוס שלב השכנוע
             
-            // Set dialog content
-            document.getElementById('obstacle-title').textContent = getObstacleTitle(obstacle.type);
-            document.getElementById('obstacle-text').textContent = obstacle.text;
+            // Set dialog content - שלב ראשוני
+            document.getElementById('obstacle-title').textContent = obstacle.obstacleTitle;
+            document.getElementById('obstacle-text').textContent = obstacle.initialText;
             
             // Show dialog
             document.getElementById('obstacle-dialog').style.display = 'block';
         }
         
-        // Get appropriate title for obstacle type
-        function getObstacleTitle(type) {
-            switch(type) {
-                case 'person':
-                    return "מחשבה שלילית!";
-                case 'ad':
-                    return "פרסומת מפתה!";
-                case 'food':
-                    return "פיתוי אוכל!";
-                default:
-                    return "מכשול!";
+        // Continue to next persuasion stage
+        function continuePersuasion() {
+            if (!currentObstacle) return;
+            
+            persuasionStage++;
+            
+            // Check if we have more persuasive texts
+            if (persuasionStage <= currentObstacle.persuasiveTexts.length) {
+                // עדכון הטקסט לשלב הנוכחי
+                document.getElementById('obstacle-text').textContent = 
+                    currentObstacle.persuasiveTexts[persuasionStage - 1];
+                
+                // במידה וזה השלב האחרון, שנה את הטקסט של כפתור ההתעלמות
+                if (persuasionStage === currentObstacle.persuasiveTexts.length) {
+                    document.getElementById('ignore-btn').textContent = "אני מתעלם!";
+                } else {
+                    document.getElementById('ignore-btn').textContent = "התעלם";
+                }
+            } else {
+                // אם אין עוד טקסטים, סגור את הדיאלוג
+                hideObstacleDialog();
+                stats.obstaclesAvoided++; // הוספת מונה התנגדות
+                
+                // Small mental boost for fully resisting
+                stats.mentalHealth = Math.min(100, stats.mentalHealth + 5);
+                updatePlayerCondition();
+                
+                // Show resistance message
+                showPopupMessage("כל הכבוד! עמדת בפני הפיתוי עד הסוף!", 2000);
+                
+                // Check resistance achievement
+                if (stats.obstaclesAvoided >= 20 && !achievements.resistanceMaster.earned) {
+                    achievements.resistanceMaster.earned = true;
+                    addAchievement(achievements.resistanceMaster.text);
+                }
             }
         }
         
@@ -799,6 +844,9 @@
             } else {
                 showPopupMessage(`הוצאת ${currentObstacle.value} ש"ח!`, 1500);
             }
+            
+            // עדכון מונה אינטראקציות עם מכשולים
+            stats.obstaclesFaced++;
             
             // Update player condition
             updatePlayerCondition();
@@ -825,26 +873,15 @@
             }
         }
         
-        // Handle ignoring obstacle
-        function ignoreObstacle() {
-            if (!currentObstacle) return;
-            
-            // Give a small mental boost for resisting
-            stats.mentalHealth = Math.min(100, stats.mentalHealth + 2);
-            updatePlayerCondition();
-            
-            // Show message
-            showPopupMessage("התגברת על הפיתוי!", 1500);
-            
-            // Reset and continue game
-            hideObstacleDialog();
-        }
-        
         // Hide obstacle dialog and continue game
         function hideObstacleDialog() {
             document.getElementById('obstacle-dialog').style.display = 'none';
             currentObstacle = null;
             gamePaused = false;
+            persuasionStage = 0;
+            
+            // Reset ignore button text
+            document.getElementById('ignore-btn').textContent = "התעלם";
         }
         
         // Collision detection
@@ -860,7 +897,7 @@
             // See if enough time has passed since last obstacle dialog
             const now = Date.now();
             if (now - lastObstacleTime < minObstacleInterval) {
-                // Too soon for another obstacle dialog, just remove the obstacle
+                // Too soon for another obstacle dialog
                 return true;
             }
             
@@ -874,8 +911,25 @@
         function updateGame() {
             if (!gameRunning || gamePaused) return;
             
-            // Update month timer
-            currentMonthTimer++;
+            // Update month timer only if player is moving (pressing screen)
+            if (isMoving) {
+                // התקדמות במהירות המותאמת למצב השחקן
+                currentMonthTimer += player.currentSpeed / player.baseSpeed;
+                
+                // הוראות תנועה - הצג אחרי 5 שניות של אי תנועה
+                if (moveTimer) {
+                    clearTimeout(moveTimer);
+                    moveTimer = null;
+                    document.getElementById('movement-instruction').style.display = 'none';
+                }
+            } else {
+                // הצג הוראות תנועה אם השחקן לא זז למשך מספר שניות
+                if (!moveTimer && !tutorialShown) {
+                    moveTimer = setTimeout(() => {
+                        document.getElementById('movement-instruction').style.display = 'block';
+                    }, 5000);
+                }
+            }
             
             if (currentMonthTimer >= framesPerMonth) {
                 currentMonthTimer = 0;
@@ -939,18 +993,6 @@
                 }
             }
             
-            // Update player
-            if (player.jumping) {
-                player.jumpVelocity += player.gravity;
-                player.y += player.jumpVelocity;
-                
-                if (player.y >= ground.y - player.height) {
-                    player.y = ground.y - player.height;
-                    player.jumping = false;
-                    player.jumpVelocity = 0;
-                }
-            }
-            
             // Update powerup status
             if (player.powerUp) {
                 player.powerUpTime--;
@@ -962,7 +1004,6 @@
                 
                 if (player.powerUpTime <= 0) {
                     player.powerUp = false;
-                    player.powerUpHits = 0;
                     player.companion = false;
                     document.getElementById('power-meter').style.display = 'none';
                     showPopupMessage("החיזוק נגמר!", 1500);
@@ -972,7 +1013,11 @@
             // Update obstacles
             for (let i = obstacles.length - 1; i >= 0; i--) {
                 const obstacle = obstacles[i];
-                obstacle.x -= obstacle.speed;
+                
+                // עדכון מיקום רק אם השחקן זז
+                if (isMoving) {
+                    obstacle.x -= obstacle.speed;
+                }
                 
                 // Check for collision
                 if (checkCollision(player, obstacle)) {
@@ -980,20 +1025,6 @@
                     obstacles.splice(i, 1);
                     
                     if (!survived) return; // Game over
-                } else if (obstacle.x + obstacle.width < player.x && !obstacle.passed) {
-                    // Player successfully avoided the obstacle
-                    obstacle.passed = true;
-                    stats.obstaclesAvoided++;
-                    
-                    // Small mental boost for avoiding obstacles
-                    stats.mentalHealth = Math.min(100, stats.mentalHealth + 1);
-                    updatePlayerCondition();
-                    
-                    // Check obstacle ninja achievement
-                    if (stats.obstaclesAvoided >= 20 && !achievements.obstacleNinja.earned) {
-                        achievements.obstacleNinja.earned = true;
-                        addAchievement(achievements.obstacleNinja.text);
-                    }
                 }
                 
                 // Remove if off-screen
@@ -1005,7 +1036,11 @@
             // Update powerups
             for (let i = powerups.length - 1; i >= 0; i--) {
                 const powerup = powerups[i];
-                powerup.x -= powerup.speed;
+                
+                // עדכון מיקום רק אם השחקן זז
+                if (isMoving) {
+                    powerup.x -= powerup.speed;
+                }
                 
                 // Check for collision
                 if (checkCollision(player, powerup)) {
@@ -1021,7 +1056,7 @@
             }
             
             // Maybe create a new obstacle (0.3% chance per frame - slower for longer game)
-            if (Math.random() < 0.003) {
+            if (Math.random() < 0.003 && isMoving) {
                 // Ensure there's enough distance from the last obstacle
                 let canCreateObstacle = true;
                 
@@ -1038,7 +1073,7 @@
             }
             
             // Maybe create a new powerup (0.1% chance per frame - fewer powerups)
-            if (Math.random() < 0.001) {
+            if (Math.random() < 0.001 && isMoving) {
                 // Make sure powerups are spaced out
                 let canCreatePowerup = true;
                 
@@ -1055,7 +1090,7 @@
             }
             
             // Process any pending obstacles
-            if (pendingObstacles.length > 0 && gameRunning) {
+            if (pendingObstacles.length > 0 && gameRunning && isMoving) {
                 const now = Date.now();
                 
                 for (let i = pendingObstacles.length - 1; i >= 0; i--) {
@@ -1375,54 +1410,8 @@
                         break;
                 }
                 
-                // Draw speech bubble if there is text
-                if (obstacle.text && obstacle.type !== 'default') {
-                    const bubbleWidth = 140;
-                    const bubbleHeight = 50;
-                    const bubbleX = obstacle.x + (obstacle.width - bubbleWidth) / 2;
-                    const bubbleY = obstacle.y - bubbleHeight - 15;
-                    
-                    // Draw bubble background
-                    ctx.fillStyle = "#FFFFFF";
-                    ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-                    ctx.strokeStyle = "#000000";
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-                    
-                    // Draw text
-                    ctx.fillStyle = "#000000";
-                    ctx.font = "bold 14px Arial";
-                    ctx.textAlign = "center";
-                    
-                    // Handle text wrapping for longer text
-                    if (obstacle.text.length > 15) {
-                        const words = obstacle.text.split(' ');
-                        let line = '';
-                        let y = bubbleY + 20;
-                        
-                        for (let i = 0; i < words.length; i++) {
-                            const testLine = line + words[i] + ' ';
-                            
-                            if (i === words.length - 1 || testLine.length > 15) {
-                                ctx.fillText(line, bubbleX + bubbleWidth/2, y);
-                                line = words[i] + ' ';
-                                y += 18;
-                            } else {
-                                line = testLine;
-                            }
-                        }
-                        
-                        if (line.length > 0) {
-                            ctx.fillText(line, bubbleX + bubbleWidth/2, y);
-                        }
-                    } else {
-                        ctx.fillText(obstacle.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
-                    }
-                    
-                    ctx.textAlign = "start";
-                }
+                // בוטלו בועות הטקסט מעל המכשולים - הטקסט מוצג רק בדיאלוג
             });
-            
             // Draw powerups
             powerups.forEach(powerup => {
                 let fillColor;
@@ -1456,6 +1445,14 @@
                     ctx.fillStyle = fillColor;
                     ctx.beginPath();
                     ctx.arc(powerup.x + powerup.width/2, powerup.y + powerup.height/2, powerup.width/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // הוספת נצנוץ למטבע
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.beginPath();
+                    ctx.arc(powerup.x + powerup.width/2 - powerup.width/4, 
+                             powerup.y + powerup.height/2 - powerup.height/4, 
+                             powerup.width/8, 0, Math.PI * 2);
                     ctx.fill();
                     
                     // Shekel sign
@@ -1596,24 +1593,7 @@
                     }
                 }
                 
-                // Draw text bubble
-                const bubbleWidth = 120;
-                const bubbleHeight = 30;
-                const bubbleX = powerup.x + (powerup.width - bubbleWidth) / 2;
-                const bubbleY = powerup.y - bubbleHeight - 10;
-                
-                // Draw bubble background
-                ctx.fillStyle = "#FFFFFF";
-                ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-                ctx.strokeStyle = "#000000";
-                ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-                
-                // Draw text
-                ctx.fillStyle = "#000000";
-                ctx.font = "12px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText(powerup.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
-                ctx.textAlign = "start";
+                // בוטלו בועות הטקסט מעל החיזוקים - הטקסט יוצג רק בעת התנגשות
             });
             
             // Draw month progress bar
@@ -1679,6 +1659,25 @@
             ctx.font = "12px Arial";
             ctx.fillText("בריאות מנטלית", healthBarX, mentalBarY - 5);
             
+            // Draw running animation if player is moving
+            if (isMoving) {
+                // Draw motion lines behind player
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+                ctx.lineWidth = 2;
+                
+                const motionX = player.x - 30;
+                
+                for (let i = 0; i < 5; i++) {
+                    const lineY = player.y + 20 + i * 10;
+                    const lineLength = 10 + i * 5;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(motionX, lineY);
+                    ctx.lineTo(motionX - lineLength, lineY);
+                    ctx.stroke();
+                }
+            }
+            
             // Draw game messages if any
             if (gameMessage && gameMessageTime > 0) {
                 const alpha = Math.min(1, gameMessageTime / 100);
@@ -1696,8 +1695,8 @@
         function drawClouds() {
             ctx.fillStyle = "#FFFFFF";
             
-            // Create cloud positions based on time
-            const time = Date.now() / 20000; // Slower movement for longer game feel
+            // Create cloud positions based on time - slower moving for longer game feel
+            const time = Date.now() / 20000;
             
             // Draw 3-5 clouds at different positions
             for (let i = 0; i < 5; i++) {
@@ -1709,6 +1708,7 @@
                 drawCloud(x, y, scale);
             }
         }
+        
         // Helper to draw a single cloud
         function drawCloud(x, y, scale) {
             const radiusX = 30 * scale;
@@ -1775,7 +1775,7 @@
             // Update game stats
             document.getElementById('months-played').textContent = stats.monthsPlayed;
             document.getElementById('powerups-collected').textContent = stats.powerupsCollected;
-            document.getElementById('obstacles-avoided').textContent = stats.obstaclesAvoided;
+            document.getElementById('obstacles-avoided').textContent = stats.obstaclesFaced;
             
             document.getElementById('game-over').style.display = 'block';
         }
@@ -1787,7 +1787,7 @@
             // Update win stats
             document.getElementById('win-months').textContent = stats.monthsPlayed;
             document.getElementById('win-powerups').textContent = stats.powerupsCollected;
-            document.getElementById('win-obstacles').textContent = stats.obstaclesAvoided;
+            document.getElementById('win-obstacles').textContent = stats.obstaclesFaced;
             
             document.getElementById('win-screen').style.display = 'block';
         }
@@ -1802,12 +1802,14 @@
             obstacles = [];
             powerups = [];
             pendingObstacles = [];
+            isMoving = false;
             
             // Reset stats
             stats = {
                 monthsPlayed: 0,
                 powerupsCollected: 0,
                 obstaclesAvoided: 0,
+                obstaclesFaced: 0,
                 expenses: 0,
                 income: 5000,
                 mentalHealth: 100,
@@ -1819,18 +1821,15 @@
                 firstMonth: { earned: false, text: "הישרדות חודש ראשון" },
                 saveHero: { earned: false, text: "חסכת 50,000 ש\"ח" },
                 powerCollector: { earned: false, text: "אספת 10 חיזוקים" },
-                obstacleNinja: { earned: false, text: "התחמקת מ-20 מכשולים" },
+                resistanceMaster: { earned: false, text: "עמדת בפני 20 פיתויים" },
                 mentalStrength: { earned: false, text: "שמרת על בריאות מנטלית חזקה" }
             };
             
             // Reset player
-            player.jumping = false;
-            player.jumpVelocity = 0;
             player.powerUp = false;
             player.powerUpTime = 0;
-            player.powerUpHits = 0;
             player.companion = false;
-            player.currentJumpPower = player.jumpPower;
+            player.currentSpeed = player.baseSpeed;
             
             // Adjust player size based on screen dimensions
             let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
@@ -1863,28 +1862,26 @@
             document.getElementById('game-over').style.display = 'none';
             document.getElementById('win-screen').style.display = 'none';
             document.getElementById('tutorial-message').style.display = 'block';
+            document.getElementById('movement-instruction').style.display = 'none';
             
             // Reset obstacle dialog tracking
             currentObstacle = null;
             lastObstacleTime = 0;
+            persuasionStage = 0;
+        }
+        // Handle movement events
+        function startMoving() {
+            isMoving = true;
+            document.getElementById('movement-instruction').style.display = 'none';
+            
+            if (moveTimer) {
+                clearTimeout(moveTimer);
+                moveTimer = null;
+            }
         }
         
-        // Jump function
-        function jump() {
-            if (!player.jumping) {
-                player.jumping = true;
-                // Use current jump power which is affected by mental and physical health
-                player.jumpVelocity = -player.currentJumpPower;
-                
-                // Play jump sound
-                try {
-                    const jumpSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU92T18=');
-                    jumpSound.volume = 0.2;
-                    jumpSound.play().catch(e => console.log('Audio play failed:', e));
-                } catch (e) {
-                    console.log('Audio creation failed:', e);
-                }
-            }
+        function stopMoving() {
+            isMoving = false;
         }
         
         // Handle window resize
@@ -1904,9 +1901,9 @@
             player.height = 80 * scaleFactor;
             player.y = ground.y - player.height;
             
-            // Adjust jump power for screen size
-            player.jumpPower = 15 * scaleFactor;
-            updatePlayerCondition(); // Update jump power based on health
+            // Adjust player base speed for screen size
+            player.baseSpeed = 5 * scaleFactor;
+            updatePlayerCondition(); // Update speed based on health
         }
         
         // Start game
@@ -1931,7 +1928,7 @@
             }, frameTime);
         }
         
-        // Event listeners
+        // Event listeners - keydown and keyup for space key
         document.addEventListener('keydown', function(event) {
             if (event.code === 'Space') {
                 if (tutorialShown) {
@@ -1941,25 +1938,20 @@
                 }
                 
                 if (gameRunning && !gamePaused) {
-                    jump();
+                    startMoving();
                 }
             }
         });
         
-        // Canvas click events
-        canvas.addEventListener('click', function() {
-            if (tutorialShown) {
-                tutorialShown = false;
-                document.getElementById('tutorial-message').style.display = 'none';
-                return;
-            }
-            
-            if (gameRunning && !gamePaused) {
-                jump();
+        document.addEventListener('keyup', function(event) {
+            if (event.code === 'Space') {
+                if (gameRunning && !gamePaused) {
+                    stopMoving();
+                }
             }
         });
         
-        // Touch events for mobile
+        // Canvas touch events for mobile
         canvas.addEventListener('touchstart', function(event) {
             event.preventDefault();
             
@@ -1970,17 +1962,51 @@
             }
             
             if (gameRunning && !gamePaused) {
-                jump();
+                startMoving();
+            }
+        });
+        
+        canvas.addEventListener('touchend', function(event) {
+            event.preventDefault();
+            
+            if (gameRunning && !gamePaused) {
+                stopMoving();
+            }
+        });
+        
+        // Canvas mouse events
+        canvas.addEventListener('mousedown', function() {
+            if (tutorialShown) {
+                tutorialShown = false;
+                document.getElementById('tutorial-message').style.display = 'none';
+                return;
+            }
+            
+            if (gameRunning && !gamePaused) {
+                startMoving();
+            }
+        });
+        
+        canvas.addEventListener('mouseup', function() {
+            if (gameRunning && !gamePaused) {
+                stopMoving();
+            }
+        });
+        
+        // Leave canvas event - stop moving if cursor leaves canvas
+        canvas.addEventListener('mouseleave', function() {
+            if (gameRunning && !gamePaused) {
+                stopMoving();
             }
         });
         
         // Obstacle dialog buttons
         document.getElementById('ignore-btn').addEventListener('click', function() {
-            ignoreObstacle();
+            continuePersuasion(); // המשך לשלב השכנוע הבא או סיים את הדיאלוג
         });
         
         document.getElementById('accept-btn').addEventListener('click', function() {
-            acceptObstacle();
+            acceptObstacle(); // קבל את המכשול עם כל ההשלכות השליליות
         });
         
         // Start button click
