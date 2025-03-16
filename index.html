@@ -233,6 +233,7 @@
             "אוגוסט 2025", "ספטמבר 2025", "אוקטובר 2025", "נובמבר 2025", "דצמבר 2025",
             "ינואר 2026", "פברואר 2026", "מרץ 2026", "אפריל 2026", "מאי 2026", 
             "יוני 2026", "יולי 2026", "אוגוסט 2026", "ספטמבר 2026", "אוקטובר 2026", "נובמבר 2026"
+        const maxPowerUpTime = 300; // 5 seconds at 60fps
         ];
         
         // 5 minutes per month
@@ -407,6 +408,36 @@ function createObstacle() {
             
             powerups.push(companion);
         }
+        // Apply powerup effect
+function applyPowerup(powerup) {
+    switch(powerup.type) {
+        case 'money':
+            score += 1000;
+            updateDisplay();
+            break;
+        case 'earlyRise':
+            player.powerUp = true;
+            player.powerUpTime = maxPowerUpTime;
+            break;
+        case 'earlySleep':
+            player.powerUp = true;
+            player.powerUpTime = maxPowerUpTime;
+            break;
+        case 'healthyFood':
+            player.powerUp = true;
+            player.powerUpTime = maxPowerUpTime;
+            break;
+        case 'dailyExercise':
+            player.powerUp = true;
+            player.powerUpTime = maxPowerUpTime;
+            break;
+        case 'companion':
+            player.companion = true;
+            player.powerUp = true;
+            player.powerUpTime = maxPowerUpTime;
+            break;
+    }
+}
         
         // Collision detection
         function checkCollision(obj1, obj2) {
@@ -476,10 +507,13 @@ function createObstacle() {
             if (player.powerUp) {
                 player.powerUpTime--;
                 if (player.powerUpTime <= 0) {
-                    player.powerUp = false;
-                    player.width = 30;
-                    player.height = 50;
-                    player.powerUpHits = 0;
+                   player.powerUp = false;
+// התאם את גודל השחקן לגודל המסך
+let scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 500;
+scaleFactor = Math.max(0.5, Math.min(1.5, scaleFactor)); // הגבל בין 0.5 ל-1.5
+player.width = 50 * scaleFactor;
+player.height = 80 * scaleFactor;
+player.powerUpHits = 0;
                 }
             }
             
@@ -934,38 +968,11 @@ if (obstacle.text && obstacle.type !== 'food') {
     ctx.fillText(obstacle.text, fixedX + bubbleWidth/2, fixedY + bubbleHeight/2 + 4);
     ctx.textAlign = 'start';
 }
-            
-            ctx.beginPath();
-            ctx.moveTo(bubbleX + radius, bubbleY);
-            ctx.lineTo(bubbleX + bubbleWidth - radius, bubbleY);
-            ctx.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY, bubbleX + bubbleWidth, bubbleY + radius);
-            ctx.lineTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight - radius);
-            ctx.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight, bubbleX + bubbleWidth - radius, bubbleY + bubbleHeight);
-            ctx.lineTo(bubbleX + bubbleWidth/2 + 10, bubbleY + bubbleHeight);
-            ctx.lineTo(bubbleX + bubbleWidth/2, bubbleY + bubbleHeight + 10);
-            ctx.lineTo(bubbleX + bubbleWidth/2 - 10, bubbleY + bubbleHeight);
-            ctx.lineTo(bubbleX + radius, bubbleY + bubbleHeight);
-            ctx.quadraticCurveTo(bubbleX, bubbleY + bubbleHeight, bubbleX, bubbleY + bubbleHeight - radius);
-            ctx.lineTo(bubbleX, bubbleY + radius);
-            ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            
-            // Draw text
-            ctx.fillStyle = '#000000';
-            ctx.font = '12px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(obstacle.text, bubbleX + bubbleWidth/2, bubbleY + bubbleHeight/2 + 4);
-            ctx.textAlign = 'start';
         }
     });
     
     // Draw powerups
-    powerUps.forEach(powerUp => {
+    powerups.forEach(powerUp => {
         switch(powerUp.type) {
             case 'morning':
                 // Draw sun icon for morning power-up
